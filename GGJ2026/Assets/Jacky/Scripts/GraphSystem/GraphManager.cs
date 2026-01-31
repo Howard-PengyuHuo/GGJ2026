@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class GraphManager : MonoBehaviour
@@ -42,31 +43,84 @@ public class GraphManager : MonoBehaviour
     [SerializeField] private bool previewEdgesInEditor = false;
 #endif
 
+    //#if UNITY_EDITOR
+    //    private void OnValidate()
+    //    {
+    //        if (Application.isPlaying) return;
+    //        if (!previewInEditor) return;
+
+    //        // 避免在导入/编译过程中乱跑
+    //        if (UnityEditor.EditorApplication.isCompiling) return;
+    //        if (UnityEditor.EditorApplication.isUpdating) return;
+
+    //        // 没配数据就不预览
+    //        if (levelData == null) return;
+
+    //        // 只做“可视化预览”：初始化 NodeActor（颜色/区域/名字等）
+    //        ClearLevel();
+
+    //        CollectSceneNodes();
+    //        ApplyLevelDataToSceneNodes();
+
+    //        if (previewEdgesInEditor)
+    //        {
+    //            BuildEdgesFromLevelData();
+    //        }
+
+    //        _currentNodeId = levelData.startNodeId;
+    //    }
+    //#endif
 #if UNITY_EDITOR
-    private void OnValidate()
+
+    private void SetSceneNodeIdLabels(bool show)
     {
-        if (Application.isPlaying) return;
-        if (!previewInEditor) return;
-
-        // 避免在导入/编译过程中乱跑
-        if (UnityEditor.EditorApplication.isCompiling) return;
-        if (UnityEditor.EditorApplication.isUpdating) return;
-
-        // 没配数据就不预览
-        if (levelData == null) return;
-
-        // 只做“可视化预览”：初始化 NodeActor（颜色/区域/名字等）
-        ClearLevel();
-
-        CollectSceneNodes();
-        ApplyLevelDataToSceneNodes();
-
-        if (previewEdgesInEditor)
+        for (int i = 0; i < allNodes.Count; i++)
         {
-            BuildEdgesFromLevelData();
+            var n = allNodes[i];
+            if (n == null) continue;
+            n.SetShowNodeIdLabel(show);
+            EditorUtility.SetDirty(n);
         }
 
-        _currentNodeId = levelData.startNodeId;
+        // 让 SceneView 立即重绘（否则可能要动一下相机才刷新）
+        SceneView.RepaintAll();
+    }
+
+
+    [ContextMenu("Editor Tools/Init Level (BuildLevel)")]
+    private void Editor_InitLevel()
+    {
+        if (Application.isPlaying)
+        {
+            Debug.LogWarning("[GraphManager] Editor_InitLevel is intended for Edit Mode.", this);
+            return;
+        }
+
+        Undo.RegisterFullObjectHierarchyUndo(gameObject, "Init Level");
+        BuildLevel();
+
+        // Init 后打开 NodeId 显示
+        SetSceneNodeIdLabels(true);
+
+        EditorUtility.SetDirty(this);
+    }
+
+    [ContextMenu("Editor Tools/Clear Level")]
+    private void Editor_ClearLevel()
+    {
+        if (Application.isPlaying)
+        {
+            Debug.LogWarning("[GraphManager] Editor_ClearLevel is intended for Edit Mode.", this);
+            return;
+        }
+
+        Undo.RegisterFullObjectHierarchyUndo(gameObject, "Clear Level");
+        ClearLevel();
+
+        // Clear 后关闭 NodeId 显示
+        SetSceneNodeIdLabels(false);
+
+        EditorUtility.SetDirty(this);
     }
 #endif
 

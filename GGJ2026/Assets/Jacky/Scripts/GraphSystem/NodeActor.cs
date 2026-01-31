@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class NodeActor : MonoBehaviour
@@ -17,8 +18,39 @@ public class NodeActor : MonoBehaviour
 
     [SerializeField] private GameObject activatedVisual;
 
+
+#if UNITY_EDITOR
+    [Header("Editor")]
+    [SerializeField] private bool showNodeIdLabel = false;
+    [SerializeField] private Color nodeIdLabelColor = Color.white;
+    [SerializeField] private float nodeIdLabelYOffset = 0.35f;
+#endif
+
     public NodeColor NodeColor => nodeColor;
     public IReadOnlyList<RegionId> NodeRegions => nodeRegions;
+
+
+#if UNITY_EDITOR
+    public void SetShowNodeIdLabel(bool show)
+    {
+        showNodeIdLabel = show;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!showNodeIdLabel) return;
+        if (string.IsNullOrEmpty(nodeId)) return;
+
+        var style = new GUIStyle(EditorStyles.boldLabel)
+        {
+            normal = { textColor = nodeIdLabelColor }
+        };
+
+        var pos = transform.position + Vector3.up * nodeIdLabelYOffset;
+        Handles.Label(pos, nodeId, style);
+    }
+#endif
+
 
     public void Init(GraphManager mgr, NodeDef nodeDef)
     {
