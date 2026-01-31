@@ -183,6 +183,7 @@ GameObject:
   - component: {fileID: 5171942386701969917}
   - component: {fileID: 3136063582352566629}
   - component: {fileID: 2263812854536345629}
+  - component: {fileID: 5873139899680036026}
   m_Layer: 0
   m_Name: NodePrefab
   m_TagString: Untagged
@@ -246,3 +247,47 @@ MonoBehaviour:
   reachableMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   unreachableMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   activatedVisual: {fileID: 4979169546179645630}
+  showNodeIdLabel: 0
+  nodeIdLabelColor: {r: 1, g: 1, b: 1, a: 1}
+  nodeIdLabelYOffset: 0.35
+--- !u!114 &5873139899680036026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7458887205208312122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06200709fdef1634289f4576b39b65d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  styles:
+  - state: 0
+    material: {fileID: 2100000, guid: c5545d79d82431b4aaa6a01b6e4ada67, type: 2}
+    emissionColor: {r: 0, g: 0, b: 0, a: 0}
+    glowStrength: 0
+    pulseSpeed: 0
+    pulseAmp: 0
+    fresnelPower: 0
+  - state: 1
+    material: {fileID: 2100000, guid: c5545d79d82431b4aaa6a01b6e4ada67, type: 2}
+    emissionColor: {r: 0, g: 0, b: 0, a: 0}
+    glowStrength: 0
+    pulseSpeed: 0
+    pulseAmp: 0
+    fresnelPower: 0
+  - state: 1
+    material: {fileID: 2100000, guid: c5545d79d82431b4aaa6a01b6e4ada67, type: 2}
+    emissionColor: {r: 0, g: 0, b: 0, a: 0}
+    glowStrength: 0
+    pulseSpeed: 0
+    pulseAmp: 0
+    fresnelPower: 0
+  - state: 1
+    material: {fileID: 2100000, guid: c5545d79d82431b4aaa6a01b6e4ada67, type: 2}
+    emissionColor: {r: 0, g: 0, b: 0, a: 0}
+    glowStrength: 0
+    pulseSpeed: 0
+    pulseAmp: 0
+    fresnelPower: 0

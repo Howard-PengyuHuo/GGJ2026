@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "DialogueGraph", menuName = "Scriptable Objects/DialogueGraph")]
+
 public class DialogueGraph : ScriptableObject
 {
     public DialogueMode mode;
@@ -11,6 +13,7 @@ public class DialogueGraph : ScriptableObject
     public NPC npcProfile;
     public bool showSpeakerUI;
     private Dictionary<string, DialogueNode> _map;
+    public GraphLevelData nextLevelData;
 
     public DialogueNode Get(string id)
     {

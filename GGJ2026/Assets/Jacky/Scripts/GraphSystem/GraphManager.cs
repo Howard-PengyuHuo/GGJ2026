@@ -1,12 +1,18 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class GraphManager : MonoBehaviour
 {
+    public static GraphManager Instance { get; private set; }
+
     [Header("Data")]
     public GraphLevelData levelData;
+
+    [Header("Reference")]
+    [SerializeField] private DialogueSystem dialogueSystem;
 
     [Header("ColorMaterials")]
     public Material defaultMat;
@@ -19,16 +25,16 @@ public class GraphManager : MonoBehaviour
     public float lineWidth = 0.03f;
     [SerializeField] private Transform lineRendererTransform;
 
+    [Header("AllNodes")]
+    [SerializeField] private List<NodeActor> allNodes = new List<NodeActor>();
+
     private readonly Dictionary<string, NodeActor> _spawnedNodes = new();
     private readonly List<LineRenderer> _spawnedLines = new();
 
-    // Runtime state (ÏÈÁô¹Ç¼Ü)
+    // Runtime state (å…ˆç•™éª¨æ¶)
     [Header("RunTime Debug")]
     [SerializeField] private string _currentNodeId;
     [SerializeField] private List<string> _reachableNodeIds = new List<string>();
-
-    [Header("AllNodes")]
-    [SerializeField] private List<NodeActor> allNodes = new List<NodeActor>();
 
     [Header("MedicineRelated")]
     [SerializeField] private List<RegionId> activatedRegions = new List<RegionId>();
@@ -37,39 +43,8 @@ public class GraphManager : MonoBehaviour
     // ================= Events =================
     public Action<List<RegionId>> OnActivatedRegionsChanged;
 
-#if UNITY_EDITOR
-    [Header("Editor Preview")]
-    [SerializeField] private bool previewInEditor = true;
-    [SerializeField] private bool previewEdgesInEditor = false;
-#endif
 
-    //#if UNITY_EDITOR
-    //    private void OnValidate()
-    //    {
-    //        if (Application.isPlaying) return;
-    //        if (!previewInEditor) return;
-
-    //        // ±ÜÃâÔÚµ¼Èë/±àÒë¹ı³ÌÖĞÂÒÅÜ
-    //        if (UnityEditor.EditorApplication.isCompiling) return;
-    //        if (UnityEditor.EditorApplication.isUpdating) return;
-
-    //        // Ã»ÅäÊı¾İ¾Í²»Ô¤ÀÀ
-    //        if (levelData == null) return;
-
-    //        // Ö»×ö¡°¿ÉÊÓ»¯Ô¤ÀÀ¡±£º³õÊ¼»¯ NodeActor£¨ÑÕÉ«/ÇøÓò/Ãû×ÖµÈ£©
-    //        ClearLevel();
-
-    //        CollectSceneNodes();
-    //        ApplyLevelDataToSceneNodes();
-
-    //        if (previewEdgesInEditor)
-    //        {
-    //            BuildEdgesFromLevelData();
-    //        }
-
-    //        _currentNodeId = levelData.startNodeId;
-    //    }
-    //#endif
+    // ================= Editor Tools =================
 #if UNITY_EDITOR
 
     private void SetSceneNodeIdLabels(bool show)
@@ -82,7 +57,7 @@ public class GraphManager : MonoBehaviour
             EditorUtility.SetDirty(n);
         }
 
-        // ÈÃ SceneView Á¢¼´ÖØ»æ£¨·ñÔò¿ÉÄÜÒª¶¯Ò»ÏÂÏà»ú²ÅË¢ĞÂ£©
+        // è®© SceneView ç«‹å³é‡ç»˜ï¼ˆå¦åˆ™å¯èƒ½è¦åŠ¨ä¸€ä¸‹ç›¸æœºæ‰åˆ·æ–°ï¼‰
         SceneView.RepaintAll();
     }
 
@@ -99,7 +74,7 @@ public class GraphManager : MonoBehaviour
         Undo.RegisterFullObjectHierarchyUndo(gameObject, "Init Level");
         BuildLevel();
 
-        // Init ºó´ò¿ª NodeId ÏÔÊ¾
+        // Init åæ‰“å¼€ NodeId æ˜¾ç¤º
         SetSceneNodeIdLabels(true);
 
         EditorUtility.SetDirty(this);
@@ -117,7 +92,7 @@ public class GraphManager : MonoBehaviour
         Undo.RegisterFullObjectHierarchyUndo(gameObject, "Clear Level");
         ClearLevel();
 
-        // Clear ºó¹Ø±Õ NodeId ÏÔÊ¾
+        // Clear åå…³é—­ NodeId æ˜¾ç¤º
         SetSceneNodeIdLabels(false);
 
         EditorUtility.SetDirty(this);
@@ -129,6 +104,16 @@ public class GraphManager : MonoBehaviour
     {
         //OnActivatedRegionsChanged += HandleActivatedRegionsChanged;
 
+        //var inventoryManager = PotionInventoryManager.Instance;
+        //if (inventoryManager != null)
+        //{
+        //    inventoryManager.OnSelectedPotionChanged += OnSelectedPotionChanged;
+        //}
+        Invoke(nameof(SubscribeAll), 0.1f);
+    }
+
+    private void SubscribeAll()
+    {
         var inventoryManager = PotionInventoryManager.Instance;
         if (inventoryManager != null)
         {
@@ -147,10 +132,20 @@ public class GraphManager : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
+
     private void Start()
     {
-        SetActivatedRegion(new List<RegionId> { RegionId.Temporal });
-        BuildLevel();
+        //SetActivatedRegion(new List<RegionId> { RegionId.Temporal });
+        //BuildLevel();
     }
 
     private void Update()
@@ -168,6 +163,22 @@ public class GraphManager : MonoBehaviour
         }
     }
 
+
+    public void BuildLevelWLevelData(GraphLevelData newLevel) {
+        if (levelData != newLevel)
+        {
+            levelData = newLevel;
+            ClearLevel();
+            BuildLevel();
+        }
+        else
+        { 
+            Debug.Log("[GraphManager] BuildLevelWLevelData: levelData is the same as current, build again.");
+            ClearLevel();
+            BuildLevel();
+        }
+        
+    }
 
     [ContextMenu("Build Level")]
     public void BuildLevel()
@@ -188,6 +199,7 @@ public class GraphManager : MonoBehaviour
         RecomputeReachable();
     }
 
+    #region BuildLevel Steps
     private void CollectSceneNodes()
     { 
         _spawnedNodes.Clear();
@@ -197,13 +209,15 @@ public class GraphManager : MonoBehaviour
             var actor = allNodes[i];
             if (actor == null) continue;
 
+            actor.gameObject.SetActive(true);
+
             if (string.IsNullOrEmpty(actor.nodeId))
             {
                 Debug.LogWarning($"[GraphManager] Found NodeActor without nodeId: {actor.gameObject.name}", actor);
                 continue;
             }
 
-            //// È·±£µã»÷»Øµ÷¿ÉÓÃ
+            //// ç¡®ä¿ç‚¹å‡»å›è°ƒå¯ç”¨
             //actor.Init(this, actor.nodeId);
 
             if (_spawnedNodes.ContainsKey(actor.nodeId))
@@ -226,20 +240,55 @@ public class GraphManager : MonoBehaviour
             if (!levelData.TryGetNode(nodeId, out var nodeDef) || nodeDef == null)
             {
                 Debug.LogWarning($"[GraphManager] Scene node '{nodeId}' not found in GraphLevelData.nodes.");
-                // ²» return£º³¡¾°¿ÉÄÜÓĞ°ÚÁËµ«Êı¾İÃ»ÅäµÄ½Úµã
+                // ä¸ returnï¼šåœºæ™¯å¯èƒ½æœ‰æ‘†äº†ä½†æ•°æ®æ²¡é…çš„èŠ‚ç‚¹
             }
 
             nodeActor.Init(this, nodeDef);
 
-            // TODO: °´ÄãµÄĞèÇó£¬°Ñ nodeDef.color / nodeDef.allRegions ·´ÏòĞ´»Ø prefab ÉÏµÄ×é¼ş
-            // Ä¿Ç°ÄãµÄ NodeActor »¹Ã»´æ region/color£¬ËùÒÔÕâÀïÏÈÓÃ²ÄÖÊ±íÏÖ color£¨ÄãÒ²¿ÉÒÔ»»³É Renderer ÑÕÉ«µÈ£©
+            // TODO: æŒ‰ä½ çš„éœ€æ±‚ï¼ŒæŠŠ nodeDef.color / nodeDef.allRegions åå‘å†™å› prefab ä¸Šçš„ç»„ä»¶
+            // ç›®å‰ä½ çš„ NodeActor è¿˜æ²¡å­˜ region/colorï¼Œæ‰€ä»¥è¿™é‡Œå…ˆç”¨æè´¨è¡¨ç° colorï¼ˆä½ ä¹Ÿå¯ä»¥æ¢æˆ Renderer é¢œè‰²ç­‰ï¼‰
             //ApplyNodeMaterial(nodeId, nodeDef);
         }
     }
 
-
     private void BuildEdgesFromLevelData()
     {
+        //if (levelData.edges == null) return;
+
+        //foreach (var e in levelData.edges)
+        //{
+        //    if (e == null) continue;
+        //    if (string.IsNullOrEmpty(e.a) || string.IsNullOrEmpty(e.b)) continue;
+
+        //    if (!_spawnedNodes.TryGetValue(e.a, out var aActor) || !_spawnedNodes.TryGetValue(e.b, out var bActor))
+        //    {
+        //        Debug.LogWarning($"[GraphManager] Edge skipped (missing node in scene): {e.a} - {e.b}");
+        //        continue;
+        //    }
+
+        //    var lrGo = new GameObject($"Edge_{e.a}_{e.b}");
+        //    if (lineRendererTransform == null)
+        //    {
+        //        Debug.LogWarning("[GraphManager] lineRendererTransform is not assigned. Using GraphManager's transform as parent.");
+        //        lrGo.transform.SetParent(this.transform);
+        //    }
+        //    else {
+        //        lrGo.transform.SetParent(lineRendererTransform);
+        //    }
+
+        //    var lr = lrGo.AddComponent<LineRenderer>();
+        //    lr.positionCount = 2;
+        //    lr.startWidth = lineWidth;
+        //    lr.endWidth = lineWidth;
+        //    lr.useWorldSpace = true;
+        //    lr.material = lineMat != null ? lineMat : new Material(Shader.Find("Sprites/Default"));
+
+        //    lr.SetPosition(0, aActor.transform.position);
+        //    lr.SetPosition(1, bActor.transform.position);
+
+        //    _spawnedLines.Add(lr);
+        //}
+
         if (levelData.edges == null) return;
 
         foreach (var e in levelData.edges)
@@ -254,34 +303,38 @@ public class GraphManager : MonoBehaviour
             }
 
             var lrGo = new GameObject($"Edge_{e.a}_{e.b}");
-            if (lineRendererTransform == null)
-            {
-                Debug.LogWarning("[GraphManager] lineRendererTransform is not assigned. Using GraphManager's transform as parent.");
-                lrGo.transform.SetParent(this.transform);
-            }
-            else {
-                lrGo.transform.SetParent(lineRendererTransform);
-            }
+
+            Transform parent = lineRendererTransform != null ? lineRendererTransform : this.transform;
+            lrGo.transform.SetParent(parent, worldPositionStays: false);
 
             var lr = lrGo.AddComponent<LineRenderer>();
             lr.positionCount = 2;
             lr.startWidth = lineWidth;
             lr.endWidth = lineWidth;
-            lr.useWorldSpace = true;
+
+            // âœ… Key: use local space so parent rotation doesn't require per-frame updates.
+            lr.useWorldSpace = false;
+
             lr.material = lineMat != null ? lineMat : new Material(Shader.Find("Sprites/Default"));
 
-            lr.SetPosition(0, aActor.transform.position);
-            lr.SetPosition(1, bActor.transform.position);
+            // âœ… Key: write endpoints in parent's local space.
+            Vector3 aLocal = parent.InverseTransformPoint(aActor.transform.position);
+            Vector3 bLocal = parent.InverseTransformPoint(bActor.transform.position);
+
+            lr.SetPosition(0, aLocal);
+            lr.SetPosition(1, bLocal);
 
             _spawnedLines.Add(lr);
         }
     }
 
+    #endregion
+
     [ContextMenu("Clear Level")]
     public void ClearLevel()
     {
-        // ·´ÏòÁ÷³Ì£º²»ÔÙÏú»Ù½Úµã£¨½ÚµãÊÇÄãÊÖ¹¤°Ú·Å²¢±£´æµ½³¡¾°ÀïµÄ£©
-        // Ö»ÇåÀíÏß
+        // åå‘æµç¨‹ï¼šä¸å†é”€æ¯èŠ‚ç‚¹ï¼ˆèŠ‚ç‚¹æ˜¯ä½ æ‰‹å·¥æ‘†æ”¾å¹¶ä¿å­˜åˆ°åœºæ™¯é‡Œçš„ï¼‰
+        // åªæ¸…ç†çº¿
         for (int i = _spawnedLines.Count - 1; i >= 0; i--)
         {
             if (_spawnedLines[i] != null)
@@ -291,18 +344,23 @@ public class GraphManager : MonoBehaviour
         _spawnedLines.Clear();
         _spawnedNodes.Clear();
 
-        // ½Úµã»Øµ½¡°Î´³õÊ¼»¯/²»¿É´ï/Î´¼¤»î¡±µÄÍâ¹Û
+        // èŠ‚ç‚¹å›åˆ°â€œæœªåˆå§‹åŒ–/ä¸å¯è¾¾/æœªæ¿€æ´»â€çš„å¤–è§‚
         for (int i = 0; i < allNodes.Count; i++)
         {
             var n = allNodes[i];
             if (n == null) continue;
             n.ResetVisual(this);
+
+            n.gameObject.SetActive(false);
         }
 
         _currentNodeId = null;
         _reachableNodeIds.Clear();
+
+        SetActivatedRegion(new List<RegionId>());
     }
 
+    // Called by NodeActor when clicked
     public void OnNodeProceeded(string nodeId)
     {
         Debug.Log($"[Graph] Clicked node: {nodeId}");
@@ -326,11 +384,28 @@ public class GraphManager : MonoBehaviour
         if (levelData != null && nodeId == levelData.endNodeId)
         {
             Debug.Log("[Graph] Reached END!");
+
+            ClearLevel();
+
+            dialogueSystem.StopDialogue();
+            if (levelData.nextLinearLevelDialogueGraph == null) { 
+                dialogueSystem.PlayNPC(levelData.nextHubAndBranchDialogueGraph);
+            }
+            else
+            {
+                dialogueSystem.Play(levelData.nextLinearLevelDialogueGraph, () => { 
+                    dialogueSystem.PlayNPC(levelData.nextHubAndBranchDialogueGraph);
+                });
+            }
         }
 
         RecomputeReachable();
     }
 
+    // æ ¹æ®å½“å‰èŠ‚ç‚¹ã€è¯å‰‚ç­‰çŠ¶æ€ï¼Œé‡æ–°è®¡ç®—å¯è¾¾èŠ‚ç‚¹;ä¸‰ç§æƒ…å†µä¸‹é‡æ–°è®¡ç®—ï¼š
+    // 1. å½“å‰èŠ‚ç‚¹å˜åŒ– => OnNodeProceeded
+    // 2. é€‰æ‹©çš„è¯å‰‚å˜åŒ– => OnSelectedPotionChangedè®¢é˜…
+    // 3. æ¿€æ´»çš„è„‘åŒºå˜åŒ– => SetActivatedRegion
     private void RecomputeReachable()
     {
         if (levelData == null || string.IsNullOrEmpty(_currentNodeId))
@@ -338,7 +413,7 @@ public class GraphManager : MonoBehaviour
 
         if (selectedPotionSO == null)
         {
-            // Ã»Ñ¡ÔñÒ©¼ÁÊ±£ºÈ«²¿µ±×÷²»¿ÉÓÃ£¨Ö»ÏÔÊ¾¾àÀë£¿»òÕßÈ«¹Øµô£©
+            // æ²¡é€‰æ‹©è¯å‰‚æ—¶ï¼šå…¨éƒ¨å½“ä½œä¸å¯ç”¨ï¼ˆåªæ˜¾ç¤ºè·ç¦»ï¼Ÿæˆ–è€…å…¨å…³æ‰ï¼‰
             _reachableNodeIds = levelData.ReturnConnectedNodeIdsDepth(_currentNodeId, 1);
         }
         else
@@ -368,7 +443,8 @@ public class GraphManager : MonoBehaviour
         }
     }
 
-    private void SetActivatedRegion(List<RegionId> activatedRegions)
+    // è®¾ç½®å½“å‰æ¿€æ´»çš„è„‘åŒºåˆ—è¡¨, ä¼šè§¦å‘é‡æ–°è®¡ç®—å¯è¾¾èŠ‚ç‚¹,å¯è¢«textç³»ç»Ÿè°ƒç”¨
+    public void SetActivatedRegion(List<RegionId> activatedRegions)
     { 
         this.activatedRegions = activatedRegions;
         RecomputeReachable();
@@ -386,4 +462,9 @@ public class GraphManager : MonoBehaviour
         selectedPotionSO = potionDef;
         RecomputeReachable();
     }
+
+    //public bool IsNodeReachable(string nodeId) { 
+    //    if (string.IsNullOrEmpty(nodeId)) return false;
+    //    return activatedRegions.Contains(nodeId);
+    //}
 }

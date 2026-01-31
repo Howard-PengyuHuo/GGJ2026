@@ -11,6 +11,17 @@ public class PotionUIManager : MonoBehaviour
 
     private void OnEnable()
     {
+        //inventory = PotionInventoryManager.Instance;
+
+        //inventory.OnInventoryChanged += Rebuild;
+        //inventory.OnPotionCountChanged += OnCountChanged;
+        //inventory.OnSelectedPotionChanged += OnSelectedChanged;
+        //Rebuild();
+        Invoke(nameof(SubscribeWInventory), 0.1f);
+    }
+
+    private void SubscribeWInventory()
+    {
         inventory = PotionInventoryManager.Instance;
 
         inventory.OnInventoryChanged += Rebuild;

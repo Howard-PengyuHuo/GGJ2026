@@ -23,5 +23,5 @@ public class DialogueChoice
     public string nextId;
     public bool backToHub;
 
-    public string activateRegion;
+    public RegionId regionId;
 }

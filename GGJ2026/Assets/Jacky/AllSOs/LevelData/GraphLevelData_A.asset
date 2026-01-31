@@ -116,3 +116,5 @@ MonoBehaviour:
     b: Node_C_1
   - a: Node_End
     b: Node_B_3
+  nextLinearLevelDialogueGraph: {fileID: 11400000, guid: 862f8c2f288ad9645b59f4658993806a, type: 2}
+  nextHubAndBranchDialogueGraph: {fileID: 11400000, guid: d6718e67ab7a3154990b6bcab09209de, type: 2}

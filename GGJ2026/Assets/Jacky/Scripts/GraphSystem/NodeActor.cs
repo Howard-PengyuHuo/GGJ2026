@@ -10,7 +10,7 @@ public class NodeActor : MonoBehaviour
 
     private GraphManager _mgr;
 
-    private bool isReachable = false;
+    //private bool isReachable = false;
 
     [Header("Test Mesh")]
     public Mesh reachableMesh;
@@ -18,6 +18,9 @@ public class NodeActor : MonoBehaviour
 
     [SerializeField] private GameObject activatedVisual;
 
+    private NodeVisualController _nodeVisualController;
+
+    private bool isReachable = false;   
 
 #if UNITY_EDITOR
     [Header("Editor")]
@@ -51,11 +54,15 @@ public class NodeActor : MonoBehaviour
     }
 #endif
 
+    public void Start()
+    {
+        _nodeVisualController = GetComponent<NodeVisualController>();
+    }
+
 
     public void Init(GraphManager mgr, NodeDef nodeDef)
     {
         _mgr = mgr;
-        //nodeId = id;
         gameObject.name = $"Node_{nodeId}";
         nodeColor = nodeDef.color;
         nodeRegions = new List<RegionId>(nodeDef.allRegions);
@@ -75,9 +82,6 @@ public class NodeActor : MonoBehaviour
 
     public void ResetVisual(GraphManager mgr = null)
     {
-        // 逻辑状态
-        isReachable = false;
-
         // Mesh 回到不可达
         var mf = GetComponentInChildren<MeshFilter>();
         if (mf != null && unreachableMesh != null)
@@ -107,10 +111,6 @@ public class NodeActor : MonoBehaviour
 
     private void OnMouseDown()
     {
-        //// 简单方案：Collider + Camera 有 Physics Raycaster（默认够用）
-        //if (_mgr != null)
-        //    _mgr.OnNodeClicked(nodeId);
-
         if (nodeId == "Node_End") {
             _mgr.OnNodeProceeded(nodeId);
             return;
@@ -129,17 +129,47 @@ public class NodeActor : MonoBehaviour
         {
             mf.mesh = reachable ? reachableMesh : unreachableMesh;
         }
+
         isReachable = reachable;
+
+        //if (_nodeVisualController == null) return;
+        //if (reachable)
+        //{
+        //    _nodeVisualController.SetState(VisualState.Reachable);
+        //}
+        //else { 
+        //    _nodeVisualController.SetState(VisualState.Default);
+        //}
     }
 
     public void SetNodeActivated(bool activated)
     { 
         //Debug.Log($"Node {nodeId} activated state set to {activated}");
         activatedVisual.SetActive(activated);
+
+        //if (_nodeVisualController == null) return;
+        //if (activated)
+        //{
+        //    _nodeVisualController.SetState(VisualState.Activated);
+        //}
+        //else
+        //{
+        //    _nodeVisualController.SetState(VisualState.Default);
+        //}
     }
 
     public void SetNodeCurSelected(bool curSelected)
     { 
         this.transform.localScale = curSelected ? Vector3.one * 1.5f : Vector3.one;
+
+        //if (_nodeVisualController == null) return;
+        //if (curSelected)
+        //{
+        //    _nodeVisualController.SetState(VisualState.Selected);
+        //}
+        //else
+        //{
+        //    _nodeVisualController.SetState(VisualState.Default);
+        //}
     }
 }

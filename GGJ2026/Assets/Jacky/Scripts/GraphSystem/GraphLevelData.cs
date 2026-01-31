@@ -20,6 +20,10 @@ public class GraphLevelData : ScriptableObject
     public List<NodeDef> nodes = new List<NodeDef>();
     public List<EdgeDef> edges = new List<EdgeDef>();
 
+    [Header("Next_Level")]
+    public DialogueGraph nextLinearLevelDialogueGraph;
+    public DialogueGraph nextHubAndBranchDialogueGraph;
+
     public bool TryGetNode(string id, out NodeDef node)
     {
         node = null;

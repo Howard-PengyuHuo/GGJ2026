@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
         dialogueSystem.Play(intro, () =>
         {
             StartLevel();
+            //GraphManager.Instance.BuildLevelWLevelData()
         });
     }
     
@@ -35,6 +36,8 @@ public class GameManager : MonoBehaviour
     {
         dialogueSystem.PlayNPC(level1);
     }
+
+
 
     void GameOver()
     {

@@ -32,3 +32,6 @@ MonoBehaviour:
       painted on the outer walls of all buildings in the city center. '
     nextId: 
     choices: []
+  npcProfile: {fileID: 0}
+  showSpeakerUI: 0
+  nextLevelData: {fileID: 0}

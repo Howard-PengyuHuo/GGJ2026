@@ -1,6 +1,8 @@
-using UnityEngine;
-using System.Collections;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
 
 public class DialogueSystem : MonoBehaviour
 {
@@ -13,7 +15,8 @@ public class DialogueSystem : MonoBehaviour
     
     [Header("References")]
     public DialogueUI ui;
-    
+    [SerializeField] private GraphManager graphManager;
+
     [Header("Typewriter")]
     public float charDelay = 0.02f;
     public bool allowSkipTyping = true;
@@ -32,7 +35,10 @@ public class DialogueSystem : MonoBehaviour
     
     //线性段落结束回调
     public Action _onFinished;
-    
+
+    ////缓存后续关卡信息
+    //private GraphLevelData _nextLevelData = null;
+
     public bool IsPlaying => _graph != null;
 
     private void Update()
@@ -56,7 +62,10 @@ public class DialogueSystem : MonoBehaviour
             Debug.LogError("DialogueSystem.Play: graph is null");
             return;
         }
-        
+
+        //_nextLevelData = graph.nextLevelData;
+        //Debug.Log($"[Dialogue System] Next Level Data is {graph.nextLevelData.name}");
+
         _graph = graph;
         _onFinished = onFinished;
 
@@ -92,7 +101,12 @@ public class DialogueSystem : MonoBehaviour
             Debug.LogError("DialogueSystem.PlayNPC: npcgraph is null");
             return;
         }
-        
+
+        //_nextLevelData = npcgraph.nextLevelData;
+        Debug.Log($"[Dialogue System] Next Level Data is {npcgraph.nextLevelData.name}");
+        graphManager.BuildLevelWLevelData(npcgraph.nextLevelData);
+
+
         npcgraph.mode = DialogueMode.HubAndBranch;
 
         if (!string.IsNullOrEmpty(npcgraph.hubId))
@@ -271,8 +285,16 @@ public class DialogueSystem : MonoBehaviour
         }
         
         GoTo(choice.nextId);
-        
+
         //这边添加GraphManager.UpdateRegion;
+        if (graphManager == null) { 
+            Debug.LogWarning("GraphManager is not assigned in DialogueSystem.");
+            return;
+        }
+
+        graphManager.SetActivatedRegion(
+            new List<RegionId> { choice.regionId }
+        );
     }
 
     private void EndDialogue()
@@ -298,5 +320,13 @@ public class DialogueSystem : MonoBehaviour
         _onFinished = null;
         
         finished?.Invoke();
+
+        //if (_nextLevelData == null)
+        //{
+        //    graphManager.ClearLevel();
+        //}
+        //else {
+        //    graphManager.BuildLevelWLevelData(_nextLevelData);
+        //}
     }
 }

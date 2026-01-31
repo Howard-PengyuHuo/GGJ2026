@@ -23,15 +23,15 @@ MonoBehaviour:
     - text: Q1
       nextId: L1.1
       backToHub: 0
-      activateRegion: 
+      regionId: 1
     - text: Q2
       nextId: L1.1
       backToHub: 0
-      activateRegion: 
+      regionId: 2
     - text: Q3
       nextId: L1.1
       backToHub: 0
-      activateRegion: 
+      regionId: 3
   - id: L1.1
     npcLine: hhhhhhhhhhhh
     nextId: L1.2
@@ -43,6 +43,7 @@ MonoBehaviour:
     - text: I see.
       nextId: 
       backToHub: 1
-      activateRegion: 
+      regionId: 0
   npcProfile: {fileID: 11400000, guid: ade9926376cdf4b4d9186164ce138ef6, type: 2}
   showSpeakerUI: 1
+  nextLevelData: {fileID: 11400000, guid: 96ffd9856f8985344a77fc43ff6b5067, type: 2}
