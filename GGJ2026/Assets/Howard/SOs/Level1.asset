@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3928bcf3d02ae74089fec4183fd7670, type: 3}
+  m_Name: Level1
+  m_EditorClassIdentifier: 
+  mode: 1
+  startId: 
+  hubId: L1
+  nodes:
+  - id: L1
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Q1
+      nextId: L1.1
+      backToHub: 0
+      activateRegion: 
+    - text: Q2
+      nextId: L1.1
+      backToHub: 0
+      activateRegion: 
+    - text: Q3
+      nextId: L1.1
+      backToHub: 0
+      activateRegion: 
+  - id: L1.1
+    npcLine: hhhhhhhhhhhh
+    nextId: L1.2
+    choices: []
+  - id: L1.2
+    npcLine: 
+    nextId: 
+    choices:
+    - text: I see.
+      nextId: 
+      backToHub: 1
+      activateRegion: 
+  npcProfile: {fileID: 11400000, guid: ade9926376cdf4b4d9186164ce138ef6, type: 2}
+  showSpeakerUI: 1
