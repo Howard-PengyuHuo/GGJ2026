@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3928bcf3d02ae74089fec4183fd7670, type: 3}
+  m_Name: Intro
+  m_EditorClassIdentifier: 
+  mode: 0
+  startId: I1
+  hubId: 
+  nodes:
+  - id: I1
+    npcLine: In my memory, the autumn in Xingang City is always permeated with dusty
+      maple leaves, the noise of the streets, and the thick smoke from factories.
+    nextId: I2
+    choices: []
+  - id: I2
+    npcLine: 'The white smoke comes from the steam threshers and light industry premises
+      that operate all day long, while the gray smoke emanates from the rumbling
+      blast furnaces. '
+    nextId: I3
+    choices: []
+  - id: I3
+    npcLine: '"Reason is freedom!" The gray-background, white-character slogan was
+      painted on the outer walls of all buildings in the city center. '
+    nextId: 
+    choices: []

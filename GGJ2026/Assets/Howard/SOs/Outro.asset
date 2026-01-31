@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3928bcf3d02ae74089fec4183fd7670, type: 3}
+  m_Name: Outro
+  m_EditorClassIdentifier: 
+  mode: 0
+  startId: O1
+  hubId: 
+  nodes:
+  - id: O1
+    npcLine: Don't be scared by the name. Of course, we don't offer prefrontal lobe
+      surgery.
+    nextId: O2
+    choices: []
+  - id: O2
+    npcLine: 'The walls don''t meet sterile standards, and the lighting isn''t up
+      to par. '
+    nextId: O3
+    choices: []
+  - id: O3
+    npcLine: ' If it were really legal, you''d already be lying on a post-operative
+      observation bed in the neurosurgery department right now. '
+    nextId: 
+    choices: []
