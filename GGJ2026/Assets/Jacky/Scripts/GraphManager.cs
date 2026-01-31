@@ -22,6 +22,7 @@ public class GraphManager : MonoBehaviour
     [Header("Edge Visual")]
     public Material lineMat;
     public float lineWidth = 0.03f;
+    [SerializeField] private Transform lineRendererTransform;
 
     private readonly Dictionary<string, NodeActor> _spawnedNodes = new();
     private readonly List<LineRenderer> _spawnedLines = new();
@@ -127,7 +128,14 @@ public class GraphManager : MonoBehaviour
             }
 
             var lrGo = new GameObject($"Edge_{e.a}_{e.b}");
-            lrGo.transform.SetParent(transform);
+            if (lineRendererTransform == null)
+            {
+                Debug.LogWarning("[GraphManager] lineRendererTransform is not assigned. Using GraphManager's transform as parent.");
+                lrGo.transform.SetParent(this.transform);
+            }
+            else {
+                lrGo.transform.SetParent(lineRendererTransform);
+            }
 
             var lr = lrGo.AddComponent<LineRenderer>();
             lr.positionCount = 2;
