@@ -9,11 +9,17 @@ public class NodeActor : MonoBehaviour
 
     private GraphManager _mgr;
 
+    private bool isReachable = false;
+
     [Header("Test Mesh")]
     public Mesh reachableMesh;
     public Mesh unreachableMesh;
 
-    [SerializeField] private GameObject connectedVisual;
+    [SerializeField] private GameObject activatedVisual;
+
+    public NodeColor NodeColor => nodeColor;
+    public IReadOnlyList<RegionId> NodeRegions => nodeRegions;
+
     public void Init(GraphManager mgr, NodeDef nodeDef)
     {
         _mgr = mgr;
@@ -37,26 +43,39 @@ public class NodeActor : MonoBehaviour
 
     private void OnMouseDown()
     {
-        // 简单方案：Collider + Camera 有 Physics Raycaster（默认够用）
-        if (_mgr != null)
-            _mgr.OnNodeClicked(nodeId);
+        //// 简单方案：Collider + Camera 有 Physics Raycaster（默认够用）
+        //if (_mgr != null)
+        //    _mgr.OnNodeClicked(nodeId);
+
+        if (nodeId == "Node_End") {
+            _mgr.OnNodeProceeded(nodeId);
+            return;
+        }
+
+        if (_mgr != null && isReachable) { 
+            _mgr.OnNodeProceeded(nodeId);
+        }
     }
 
-    public void SetNodeReachable(RegionId curActiateRegion)
-    { 
-        bool isReachable = nodeRegions.Contains(curActiateRegion);
+    public void SetNodeReachable(bool reachable)
+    {
+        //Debug.Log($"Node {nodeId} reachable state set to {reachable}");
         var mf = GetComponentInChildren<MeshFilter>();
         if (mf != null)
         {
-            mf.mesh = isReachable ? reachableMesh : unreachableMesh;
+            mf.mesh = reachable ? reachableMesh : unreachableMesh;
         }
+        isReachable = reachable;
     }
 
-    public void SetNodeConnected(bool connected)
+    public void SetNodeActivated(bool activated)
     { 
-        if (connectedVisual != null)
-        {
-            connectedVisual.SetActive(connected);
-        }
+        //Debug.Log($"Node {nodeId} activated state set to {activated}");
+        activatedVisual.SetActive(activated);
+    }
+
+    public void SetNodeCurSelected(bool curSelected)
+    { 
+        this.transform.localScale = curSelected ? Vector3.one * 1.5f : Vector3.one;
     }
 }

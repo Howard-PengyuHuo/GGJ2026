@@ -7,6 +7,7 @@ public class PotionPanelUI : MonoBehaviour
     public Button button;
     public Image icon;
     public Image highlight;
+    public Image background;
     public TMP_Text nameText;
     public TMP_Text countText;
 
@@ -24,8 +25,7 @@ public class PotionPanelUI : MonoBehaviour
         icon.sprite = def.icon;
         countText.text = count.ToString();
 
-        button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => _mgr.SetSelectedPotion(_potionId));
+        background.color = def.uiTint;
 
         SetSelected(_mgr.SelectedPotionId == _potionId);
     }
@@ -39,5 +39,15 @@ public class PotionPanelUI : MonoBehaviour
     public void SetSelected(bool selected)
     {
         if (highlight) highlight.enabled = selected;
+    }
+
+    public void OnButtonSelected()
+    {
+        Debug.Log($"Potion {_potionId} selected");
+        if (highlight != null)
+        {
+            highlight.enabled = true;
+        }
+        _mgr.SetSelectedPotion(_potionId);
     }
 }

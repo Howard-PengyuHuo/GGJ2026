@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Penicillin
   description: This is a Penicillin
   icon: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
-  uiTint: {r: 1, g: 1, b: 1, a: 1}
+  uiTint: {r: 0, g: 1, b: 0.06287718, a: 0.5019608}
   allowedColors: 02000000
   maxSteps: 1
   consumeOnMove: 1

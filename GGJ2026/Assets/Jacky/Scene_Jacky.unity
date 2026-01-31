@@ -1324,6 +1324,8 @@ MonoBehaviour:
   lineMat: {fileID: 0}
   lineWidth: 0.05
   lineRendererTransform: {fileID: 863838528}
+  _currentNodeId: 
+  _reachableNodeIds: []
   allNodes:
   - {fileID: 766224738}
   - {fileID: 1329947881}
@@ -1341,7 +1343,7 @@ MonoBehaviour:
   - {fileID: 1892651339}
   - {fileID: 1783026294}
   activatedRegions: 
-  medicineStrength: 1
+  selectedPotionSO: {fileID: 0}
 --- !u!114 &1505193447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1360,6 +1362,8 @@ MonoBehaviour:
     amount: 3
   - potionId: P_Morphine
     amount: 5
+  - potionId: P_Penicillin
+    amount: 9
 --- !u!1 &1597034162
 GameObject:
   m_ObjectHideFlags: 0

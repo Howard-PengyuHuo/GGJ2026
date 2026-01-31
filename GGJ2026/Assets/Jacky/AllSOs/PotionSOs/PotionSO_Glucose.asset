@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Glucose
   description: This is a Glucose
   icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  uiTint: {r: 1, g: 1, b: 1, a: 1}
+  uiTint: {r: 1, g: 0.8353392, b: 0, a: 0.5019608}
   allowedColors: 01000000
   maxSteps: 1
   consumeOnMove: 1

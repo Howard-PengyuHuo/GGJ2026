@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,20 +29,64 @@ public class GraphManager : MonoBehaviour
     private readonly List<LineRenderer> _spawnedLines = new();
 
     // Runtime state (先留骨架)
-    private string _currentNodeId;
-    private List<string> _reachableNodeIds = new List<string>();
+    [Header("RunTime Debug")]
+    [SerializeField] private string _currentNodeId;
+    [SerializeField] private List<string> _reachableNodeIds = new List<string>();
 
     [Header("AllNodes")]
     [SerializeField] private List<NodeActor> allNodes = new List<NodeActor>();
 
     [Header("MedicineRelated")]
     [SerializeField] private List<RegionId> activatedRegions = new List<RegionId>();
-    [SerializeField] private int medicineStrength = 1;
+    [SerializeField] private PotionSO selectedPotionSO;
+
+    // ================= Events =================
+    public Action<List<RegionId>> OnActivatedRegionsChanged;
+
+
+    private void OnEnable()
+    {
+        //OnActivatedRegionsChanged += HandleActivatedRegionsChanged;
+
+        var inventoryManager = PotionInventoryManager.Instance;
+        if (inventoryManager != null)
+        {
+            inventoryManager.OnSelectedPotionChanged += OnSelectedPotionChanged;
+        }
+    }
+
+    private void OnDisable()
+    {
+        //OnActivatedRegionsChanged -= HandleActivatedRegionsChanged;
+
+        var inventoryManager = PotionInventoryManager.Instance;
+        if (inventoryManager != null)
+        {
+            inventoryManager.OnSelectedPotionChanged -= OnSelectedPotionChanged;
+        }
+    }
 
     private void Start()
     {
+        SetActivatedRegion(new List<RegionId> { RegionId.Temporal });
         BuildLevel();
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.J)) { 
+            SetActivatedRegion(new List<RegionId> { RegionId.Temporal });
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            SetActivatedRegion(new List<RegionId> { RegionId.Limbic });
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            SetActivatedRegion(new List<RegionId> { RegionId.Brainstem });
+        }
+    }
+
 
     [ContextMenu("Build Level")]
     public void BuildLevel()
@@ -166,18 +211,25 @@ public class GraphManager : MonoBehaviour
         _spawnedNodes.Clear();
     }
 
-    public void OnNodeClicked(string nodeId)
+    public void OnNodeProceeded(string nodeId)
     {
         Debug.Log($"[Graph] Clicked node: {nodeId}");
 
         //List<string> connectedIds = levelData.ReturnConnectedNodeIdsDepth(_currentNodeId, medicineStrength);
         if (!_reachableNodeIds.Contains(nodeId))
         {
-            Debug.Log("[Graph] Node not connected to current node.");
+            Debug.LogWarning("[Graph] Node not connected to current node. But Technically Should in NodeActor");
             return;
         }
 
         _currentNodeId = nodeId;
+
+        var inventoryManager = PotionInventoryManager.Instance;
+        if (inventoryManager != null)
+        {
+            var potionId = inventoryManager.SelectedPotionId;
+            inventoryManager.TryConsume(potionId);
+        }
 
         if (levelData != null && nodeId == levelData.endNodeId)
         {
@@ -189,45 +241,57 @@ public class GraphManager : MonoBehaviour
 
     private void RecomputeReachable()
     {
-        //foreach (var nodeId in _spawnedNodes.Keys)
-        //{
-        //    levelData.TryGetNode(nodeId, out var nodeDef);
-        //    //ApplyNodeMaterial(nodeId, nodeDef);
-        //}
-        _reachableNodeIds = levelData.ReturnConnectedNodeIdsDepth(_currentNodeId, medicineStrength);
-        foreach (var nodeId in _spawnedNodes.Keys)
+        if (levelData == null || string.IsNullOrEmpty(_currentNodeId))
+            return;
+
+        if (selectedPotionSO == null)
         {
-            if (_spawnedNodes.TryGetValue(nodeId, out var actor))
+            // 没选择药剂时：全部当作不可用（只显示距离？或者全关掉）
+            _reachableNodeIds = levelData.ReturnConnectedNodeIdsDepth(_currentNodeId, 1);
+        }
+        else
+        {
+            _reachableNodeIds = levelData.ReturnConnectedNodeIdsDepth(_currentNodeId, selectedPotionSO.maxSteps);
+        }
+
+        foreach (var kvp in _spawnedNodes)
+        { 
+            var actor = kvp.Value;
+            bool inRange = _reachableNodeIds.Contains(actor.nodeId);
+            bool colorOk = selectedPotionSO != null && selectedPotionSO.allowedColors.Contains(actor.NodeColor);
+
+            bool regionOk = false;
+            foreach (var r in actor.NodeRegions)
             {
-                actor.SetNodeConnected(_reachableNodeIds.Contains(nodeId));
+                if (activatedRegions.Contains(r))
+                {
+                    regionOk = true;
+                    break;
+                }
             }
+
+            actor.SetNodeActivated(regionOk);
+            actor.SetNodeReachable(inRange && colorOk && regionOk);
+            actor.SetNodeCurSelected(actor.nodeId == _currentNodeId);
         }
     }
 
-    private void ApplyNodeMaterial(string nodeId, NodeDef nodeDef)
+    private void SetActivatedRegion(List<RegionId> activatedRegions)
+    { 
+        this.activatedRegions = activatedRegions;
+        RecomputeReachable();
+        OnActivatedRegionsChanged?.Invoke(activatedRegions);
+    }
+
+    private void OnSelectedPotionChanged(string potionId)
     {
-        if (!_spawnedNodes.TryGetValue(nodeId, out var actor)) return;
+        var inventoryManager = PotionInventoryManager.Instance;
+        if (inventoryManager == null) return;
 
-        var rend = actor.GetComponentInChildren<Renderer>();
-        if (rend == null) return;
+        var potionDef = inventoryManager.GetPotionDef(potionId);
+        if (potionDef == null) return;
 
-        //if (levelData != null && nodeId == levelData.startNodeId && startMat != null)
-        //{
-        //    rend.sharedMaterial = startMat;
-        //    return;
-        //}
-
-        //if (levelData != null && nodeId == levelData.endNodeId && endMat != null)
-        //{
-        //    rend.sharedMaterial = endMat;
-        //    return;
-        //}
-
-        // 你真正想要的：根据 levelData 中该 nodeId 的 color/region 去设定显示
-        // 这里先维持原行为：默认材质
-        if (defaultMat != null) rend.sharedMaterial = defaultMat;
-
-        // 如果你希望立刻把 NodeColor 映射到材质，也可以在这里 switch(nodeDef.color) 做映射
-        // （但你当前只有 default/reachable/locked/start/end 材质，所以先不强行加）
+        selectedPotionSO = potionDef;
+        RecomputeReachable();
     }
 }
