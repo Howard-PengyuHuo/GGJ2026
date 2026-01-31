@@ -41,6 +41,38 @@ public class NodeActor : MonoBehaviour
         }
     }
 
+    public void ResetVisual(GraphManager mgr = null)
+    {
+        // 逻辑状态
+        isReachable = false;
+
+        // Mesh 回到不可达
+        var mf = GetComponentInChildren<MeshFilter>();
+        if (mf != null && unreachableMesh != null)
+        {
+            mf.mesh = unreachableMesh;
+        }
+
+        // Activated 关掉
+        if (activatedVisual != null)
+        {
+            activatedVisual.SetActive(false);
+        }
+
+        // 选中缩放复原
+        transform.localScale = Vector3.one;
+
+        // 材质回默认（如果给了 mgr & defaultMat）
+        if (mgr != null && mgr.defaultMat != null)
+        {
+            var r = GetComponentInChildren<Renderer>();
+            if (r != null)
+            {
+                r.material = mgr.defaultMat;
+            }
+        }
+    }
+
     private void OnMouseDown()
     {
         //// 简单方案：Collider + Camera 有 Physics Raycaster（默认够用）

@@ -7,15 +7,8 @@ public class GraphManager : MonoBehaviour
     [Header("Data")]
     public GraphLevelData levelData;
 
-    [Header("Prefabs")]
-    //public GameObject nodePrefab;          // 一个带 Collider + MeshRenderer 的球体之类
-    public Material defaultMat;
-    public Material reachableMat;
-    public Material lockedMat;
-    public Material startMat;
-    public Material endMat;
-
     [Header("ColorMaterials")]
+    public Material defaultMat;
     public Material redMat;
     public Material yellowMat;
     public Material greenMat;
@@ -42,6 +35,40 @@ public class GraphManager : MonoBehaviour
 
     // ================= Events =================
     public Action<List<RegionId>> OnActivatedRegionsChanged;
+
+#if UNITY_EDITOR
+    [Header("Editor Preview")]
+    [SerializeField] private bool previewInEditor = true;
+    [SerializeField] private bool previewEdgesInEditor = false;
+#endif
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (Application.isPlaying) return;
+        if (!previewInEditor) return;
+
+        // 避免在导入/编译过程中乱跑
+        if (UnityEditor.EditorApplication.isCompiling) return;
+        if (UnityEditor.EditorApplication.isUpdating) return;
+
+        // 没配数据就不预览
+        if (levelData == null) return;
+
+        // 只做“可视化预览”：初始化 NodeActor（颜色/区域/名字等）
+        ClearLevel();
+
+        CollectSceneNodes();
+        ApplyLevelDataToSceneNodes();
+
+        if (previewEdgesInEditor)
+        {
+            BuildEdgesFromLevelData();
+        }
+
+        _currentNodeId = levelData.startNodeId;
+    }
+#endif
 
 
     private void OnEnable()
@@ -209,6 +236,17 @@ public class GraphManager : MonoBehaviour
 
         _spawnedLines.Clear();
         _spawnedNodes.Clear();
+
+        // 节点回到“未初始化/不可达/未激活”的外观
+        for (int i = 0; i < allNodes.Count; i++)
+        {
+            var n = allNodes[i];
+            if (n == null) continue;
+            n.ResetVisual(this);
+        }
+
+        _currentNodeId = null;
+        _reachableNodeIds.Clear();
     }
 
     public void OnNodeProceeded(string nodeId)

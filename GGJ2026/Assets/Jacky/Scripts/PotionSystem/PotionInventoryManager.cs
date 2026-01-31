@@ -128,4 +128,14 @@ public class PotionInventoryManager : MonoBehaviour
 
         return true;
     }
+
+    public void Add(string potionId, int amount = 1)
+    {
+        if (!_defs.ContainsKey(potionId)) return;
+        _counts.TryGetValue(potionId, out var c);
+        c += amount;
+        _counts[potionId] = c;
+        OnPotionCountChanged?.Invoke(potionId, c);
+        OnInventoryChanged?.Invoke();
+    }
 }
