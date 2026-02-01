@@ -64,41 +64,41 @@ public class NodeActor : MonoBehaviour
     {
         _mgr = mgr;
         gameObject.name = $"Node_{nodeId}";
-        nodeColor = nodeDef.color;
-        nodeRegions = new List<RegionId>(nodeDef.allRegions);
-
-        switch (nodeColor) { 
-            case NodeColor.Red:
-                GetComponentInChildren<Renderer>().material = mgr.redMat;
-                break;
-            case NodeColor.Yellow:
-                GetComponentInChildren<Renderer>().material = mgr.yellowMat;
-                break;
-            case NodeColor.Green:
-                GetComponentInChildren<Renderer>().material = mgr.greenMat;
-                break;
-        }
+        // nodeColor = nodeDef.color;
+        // nodeRegions = new List<RegionId>(nodeDef.allRegions);
+        //
+        // switch (nodeColor) { 
+        //     case NodeColor.Red:
+        //         GetComponentInChildren<Renderer>().material = mgr.redMat;
+        //         break;
+        //     case NodeColor.Yellow:
+        //         GetComponentInChildren<Renderer>().material = mgr.yellowMat;
+        //         break;
+        //     case NodeColor.Green:
+        //         GetComponentInChildren<Renderer>().material = mgr.greenMat;
+        //         break;
+        // }
     }
 
     public void ResetVisual(GraphManager mgr = null)
     {
-        // Mesh »Øµ½²»¿É´ï
+        // Mesh ï¿½Øµï¿½ï¿½ï¿½ï¿½É´ï¿½
         var mf = GetComponentInChildren<MeshFilter>();
         if (mf != null && unreachableMesh != null)
         {
             mf.mesh = unreachableMesh;
         }
 
-        // Activated ¹Øµô
+        // Activated ï¿½Øµï¿½
         if (activatedVisual != null)
         {
             activatedVisual.SetActive(false);
         }
 
-        // Ñ¡ÖÐËõ·Å¸´Ô­
+        // Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½Å¸ï¿½Ô­
         transform.localScale = Vector3.one;
 
-        // ²ÄÖÊ»ØÄ¬ÈÏ£¨Èç¹û¸øÁË mgr & defaultMat£©
+        // ï¿½ï¿½ï¿½Ê»ï¿½Ä¬ï¿½Ï£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ mgr & defaultMatï¿½ï¿½
         if (mgr != null && mgr.defaultMat != null)
         {
             var r = GetComponentInChildren<Renderer>();
