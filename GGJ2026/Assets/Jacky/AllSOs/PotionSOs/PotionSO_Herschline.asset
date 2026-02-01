@@ -10,11 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5af62cfce92a0614d9e2b25ca3a239c7, type: 3}
-  m_Name: PotionSO_Glucose
+  m_Name: PotionSO_Herschline
   m_EditorClassIdentifier: 
-  potionId: P_Glucose
-  displayName: Glucose
-  description: This is a Glucose
+  potionId: P_Herschline
+  displayName: Herschline
+  description: 'Used to Track Excitement
+
+    Induces absolute stillness in fetuses
+    before birth.
+
+'
   icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   uiTint: {r: 1, g: 0.8353392, b: 0, a: 0.5019608}
   allowedColors: 01000000

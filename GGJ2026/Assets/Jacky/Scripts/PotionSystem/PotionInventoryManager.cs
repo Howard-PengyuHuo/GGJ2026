@@ -19,8 +19,11 @@ public class PotionInventoryManager : MonoBehaviour
     [Header("Initial Inventory")]
     public List<Entry> initialInventory = new();
 
-    private Dictionary<string, int> _counts = new();
-    private Dictionary<string, PotionSO> _defs = new();
+    private readonly Dictionary<string, int> _counts = new();
+    private readonly Dictionary<string, PotionSO> _defs = new();
+
+    // NEW: world potion instances mapping
+    private readonly Dictionary<string, PotionBehaviour> _worldPotions = new();
 
     public string SelectedPotionId { get; private set; }
 
@@ -73,16 +76,13 @@ public class PotionInventoryManager : MonoBehaviour
 
     private string PickDefaultPotion()
     {
-        // 优先选择有数量的药水
         foreach (var kvp in _counts)
             if (kvp.Value > 0)
                 return kvp.Key;
 
-        // 否则选择任意一种药水
         foreach (var kvp in _counts)
             return kvp.Key;
 
-        // 否则没有可选的药水
         return null;
     }
 
@@ -105,9 +105,14 @@ public class PotionInventoryManager : MonoBehaviour
         if (string.IsNullOrEmpty(potionId)) return false;
         if (!_counts.ContainsKey(potionId)) return false;
 
-        if (SelectedPotionId == potionId) return true;
+        if (SelectedPotionId == potionId)
+        {
+            ApplyWorldSelectionHighlight(potionId);
+            return true;
+        }
 
         SelectedPotionId = potionId;
+        ApplyWorldSelectionHighlight(potionId);
         OnSelectedPotionChanged?.Invoke(potionId);
         return true;
     }
@@ -137,5 +142,39 @@ public class PotionInventoryManager : MonoBehaviour
         _counts[potionId] = c;
         OnPotionCountChanged?.Invoke(potionId, c);
         OnInventoryChanged?.Invoke();
+    }
+
+    // ---------------- NEW: world potion registry & highlight ----------------
+
+    public void RegisterWorldPotion(PotionBehaviour potion)
+    {
+        if (potion == null || string.IsNullOrEmpty(potion.PotionId))
+            return;
+
+        _worldPotions[potion.PotionId] = potion;
+
+        // If this is current selected one, sync highlight immediately.
+        if (!string.IsNullOrEmpty(SelectedPotionId) && potion.PotionId == SelectedPotionId)
+            potion.SetHighlighted(true);
+        else
+            potion.SetHighlighted(false);
+    }
+
+    public void UnregisterWorldPotion(PotionBehaviour potion)
+    {
+        if (potion == null || string.IsNullOrEmpty(potion.PotionId))
+            return;
+
+        if (_worldPotions.TryGetValue(potion.PotionId, out var cur) && cur == potion)
+            _worldPotions.Remove(potion.PotionId);
+    }
+
+    private void ApplyWorldSelectionHighlight(string selectedPotionId)
+    {
+        foreach (var kv in _worldPotions)
+        {
+            if (kv.Value == null) continue;
+            kv.Value.SetHighlighted(kv.Key == selectedPotionId);
+        }
     }
 }

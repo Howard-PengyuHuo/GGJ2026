@@ -14,6 +14,7 @@ public class GraphManager : MonoBehaviour
 
     [Header("Reference")]
     [SerializeField] private DialogueSystem dialogueSystem;
+    [SerializeField] private PotionInventoryManager potionInventoryManager;
     [SerializeField] private Transform brainSpawnTransform;
 
     [Header("ColorMaterials")]
@@ -107,22 +108,18 @@ public class GraphManager : MonoBehaviour
 
     private void OnEnable()
     {
-        //OnActivatedRegionsChanged += HandleActivatedRegionsChanged;
-
-        //var inventoryManager = PotionInventoryManager.Instance;
-        //if (inventoryManager != null)
-        //{
-        //    inventoryManager.OnSelectedPotionChanged += OnSelectedPotionChanged;
-        //}
         Invoke(nameof(SubscribeAll), 0.1f);
     }
 
     private void SubscribeAll()
     {
-        var inventoryManager = PotionInventoryManager.Instance;
-        if (inventoryManager != null)
-        {
-            inventoryManager.OnSelectedPotionChanged += OnSelectedPotionChanged;
+        //var inventoryManager = PotionInventoryManager.Instance;
+        //if (inventoryManager != null)
+        //{
+        //    inventoryManager.OnSelectedPotionChanged += OnSelectedPotionChanged;
+        //}
+        if (potionInventoryManager != null) { 
+            potionInventoryManager.OnSelectedPotionChanged += OnSelectedPotionChanged;
         }
         if (dialogueSystem != null) { 
             dialogueSystem.OnDialogueStarted += OnDialogueStarted;
@@ -480,6 +477,8 @@ public class GraphManager : MonoBehaviour
 
     private void OnSelectedPotionChanged(string potionId)
     {
+        Debug.Log("[GraphManager] OnSelectedPotionChanged: " + potionId);
+
         var inventoryManager = PotionInventoryManager.Instance;
         if (inventoryManager == null) return;
 

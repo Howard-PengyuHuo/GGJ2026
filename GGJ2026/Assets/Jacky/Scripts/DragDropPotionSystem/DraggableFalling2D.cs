@@ -22,17 +22,18 @@ public class DraggableFalling2D : MonoBehaviour
 
     private SpriteRenderer sr;
 
+    // NEW
+    private PotionBehaviour _potion;
+
     private void Awake()
     {
         cam = Camera.main;
-        //if (cam == null)
-        //    cam = FindObjectOfType<Camera>();
 
-        sr = GetComponent<SpriteRenderer>();
+        sr = GetComponentInChildren<SpriteRenderer>();
         _col = GetComponent<Collider2D>();
 
-        //if (bounds == null)
-        //    bounds = FindObjectOfType<DragBounds2D>();
+        // NEW
+        _potion = GetComponent<PotionBehaviour>();
     }
 
     private void Update()
@@ -49,12 +50,22 @@ public class DraggableFalling2D : MonoBehaviour
 
                 Vector3 mouseWorld = GetMouseWorld();
                 grabOffset = transform.position - mouseWorld;
+
+                // NEW: bring to front + select
+                if (_potion != null)
+                {
+                    _potion.BringToFront();
+                    //_potion.SelectThisPotion();
+                }
             }
         }
 
         // --- mouse up: stop drag ---
         if (Input.GetMouseButtonUp(0))
         {
+            if (isDragging && _potion != null)
+                _potion.RestoreOrderIfNeeded();
+
             isDragging = false;
         }
 
@@ -70,7 +81,6 @@ public class DraggableFalling2D : MonoBehaviour
 
             Vector3 clamped = bounds.ClampPosition(desired, extents);
 
-            // 被地面顶回去 -> 清零速度
             if (clamped.y > desired.y)
                 fallSpeed = 0f;
 
