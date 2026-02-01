@@ -68,23 +68,23 @@ public class PotionInventoryManager : MonoBehaviour
             _counts[e.potionId] = Mathf.Max(0, e.amount);
         }
 
-        SelectedPotionId = PickDefaultPotion();
+        //SelectedPotionId = PickDefaultPotion();
         OnInventoryChanged?.Invoke();
-        if (!string.IsNullOrEmpty(SelectedPotionId))
-            OnSelectedPotionChanged?.Invoke(SelectedPotionId);
+        //if (!string.IsNullOrEmpty(SelectedPotionId))
+        //    OnSelectedPotionChanged?.Invoke(SelectedPotionId);
     }
 
-    private string PickDefaultPotion()
-    {
-        foreach (var kvp in _counts)
-            if (kvp.Value > 0)
-                return kvp.Key;
+    //private string PickDefaultPotion()
+    //{
+    //    foreach (var kvp in _counts)
+    //        if (kvp.Value > 0)
+    //            return kvp.Key;
 
-        foreach (var kvp in _counts)
-            return kvp.Key;
+    //    foreach (var kvp in _counts)
+    //        return kvp.Key;
 
-        return null;
-    }
+    //    return null;
+    //}
 
     // ---------- Public API ----------
     public PotionSO GetPotionDef(string potionId)
@@ -128,8 +128,8 @@ public class PotionInventoryManager : MonoBehaviour
         OnPotionCountChanged?.Invoke(potionId, c);
         OnInventoryChanged?.Invoke();
 
-        if (potionId == SelectedPotionId && c == 0)
-            SetSelectedPotion(PickDefaultPotion());
+        //if (potionId == SelectedPotionId && c == 0)
+        //    SetSelectedPotion(PickDefaultPotion());
 
         return true;
     }
