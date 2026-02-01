@@ -28,94 +28,159 @@ MonoBehaviour:
     color: 1
     allRegions: 01000000
   - id: Node_A_4
-    color: 0
+    color: 4
+    allRegions: 01000000
+  - id: Node_AB_5
+    color: 4
+    allRegions: 0100000002000000
+  - id: Node_AC_6
+    color: 4
+    allRegions: 0100000003000000
+  - id: Node_A_7
+    color: 5
     allRegions: 01000000
   - id: Node_B_1
-    color: 1
+    color: 0
     allRegions: 02000000
   - id: Node_B_2
     color: 0
     allRegions: 02000000
-  - id: Node_B_3
-    color: 2
-    allRegions: 02000000
-  - id: Node_C_1
-    color: 2
-    allRegions: 03000000
-  - id: Node_C_2
-    color: 2
-    allRegions: 03000000
-  - id: Node_C_3
+  - id: Node_BA_3
     color: 1
-    allRegions: 03000000
-  - id: Node_AB_1
-    color: 2
-    allRegions: 0100000002000000
-  - id: Node_AC_1
-    color: 0
-    allRegions: 0100000003000000
-  - id: Node_BC_1
-    color: 1
+    allRegions: 0200000001000000
+  - id: Node_BC_4
+    color: 4
     allRegions: 0200000003000000
+  - id: Node_BA_5
+    color: 4
+    allRegions: 0200000001000000
+  - id: Node_B_6
+    color: 4
+    allRegions: 02000000
+  - id: Node_B_7
+    color: 5
+    allRegions: 02000000
   - id: Node_Start
     color: 3
     allRegions: 00000000
   - id: Node_End
     color: 3
     allRegions: 00000000
+  - id: Node_C_1
+    color: 1
+    allRegions: 03000000
+  - id: Node_C_2
+    color: 4
+    allRegions: 03000000
+  - id: Node_CB_3
+    color: 4
+    allRegions: 0300000002000000
+  - id: Node_C_4
+    color: 4
+    allRegions: 03000000
+  - id: Node_C_5
+    color: 5
+    allRegions: 03000000
+  - id: Node_CA_6
+    color: 5
+    allRegions: 0300000001000000
+  - id: Node_C_7
+    color: 5
+    allRegions: 03000000
+  - id: Node_CB_8
+    color: 5
+    allRegions: 0300000002000000
   edges:
   - a: Node_Start
     b: Node_A_1
+  - a: Node_Start
+    b: Node_BC_4
+  - a: Node_A_1
+    b: Node_C_4
+  - a: Node_A_1
+    b: Node_A_7
+  - a: Node_BA_3
+    b: Node_End
+  - a: Node_C_7
+    b: Node_End
+  - a: Node_A_7
+    b: Node_C_4
+  - a: Node_A_7
+    b: Node_C_5
+  - a: Node_C_5
+    b: Node_AC_6
+  - a: Node_C_4
+    b: Node_AC_6
+  - a: Node_C_4
+    b: Node_C_5
+  - a: Node_C_5
+    b: Node_B_6
+  - a: Node_B_6
+    b: Node_CB_8
+  - a: Node_CB_8
+    b: Node_AC_6
+  - a: Node_AC_6
+    b: Node_BA_5
+  - a: Node_BA_5
+    b: Node_C_7
+  - a: Node_CB_8
+    b: Node_B_1
+  - a: Node_CB_8
+    b: Node_B_1
+  - a: Node_AB_5
+    b: Node_B_2
+  - a: Node_B_2
+    b: Node_C_7
+  - a: Node_BC_4
+    b: Node_CA_6
+  - a: Node_CA_6
+    b: Node_C_2
+  - a: Node_C_2
+    b: Node_C_4
+  - a: Node_C_4
+    b: Node_C_1
+  - a: Node_CA_6
+    b: Node_A_2
+  - a: Node_A_2
+    b: Node_A_3
+  - a: Node_A_3
+    b: Node_B_6
+  - a: Node_A_3
+    b: Node_C_5
   - a: Node_A_1
     b: Node_A_2
-  - a: Node_A_1
-    b: Node_A_3
-  - a: Node_A_1
-    b: Node_A_4
   - a: Node_A_2
-    b: Node_A_3
-  - a: Node_A_2
-    b: Node_AB_1
-  - a: Node_A_3
-    b: Node_AB_1
-  - a: Node_A_3
-    b: Node_A_4
-  - a: Node_A_4
-    b: Node_AB_1
-  - a: Node_A_4
-    b: Node_AC_1
-  - a: Node_AB_1
+    b: Node_CB_3
+  - a: Node_CB_3
     b: Node_B_1
-  - a: Node_AB_1
-    b: Node_B_2
-  - a: Node_B_1
-    b: Node_B_2
-  - a: Node_B_1
-    b: Node_B_3
-  - a: Node_B_2
-    b: Node_B_3
-  - a: Node_B_2
+  - a: Node_CB_3
+    b: Node_AB_5
+  - a: Node_CB_3
     b: Node_A_4
+  - a: Node_B_1
+    b: Node_B_2
   - a: Node_B_2
-    b: Node_BC_1
-  - a: Node_BC_1
-    b: Node_B_3
-  - a: Node_BC_1
-    b: Node_AC_1
-  - a: Node_BC_1
-    b: Node_C_2
-  - a: Node_BC_1
-    b: Node_C_3
-  - a: Node_C_3
+    b: Node_BC_7
+  - a: Node_BC_7
+    b: Node_A_4
+  - a: Node_BC_7
+    b: Node_A_4
+  - a: Node_BC_7
+    b: Node_A_4
+  - a: Node_AB_5
+    b: Node_A_4
+  - a: Node_A_4
+    b: Node_BC_4
+  - a: Node_BA_5
     b: Node_C_1
-  - a: Node_C_2
+  - a: Node_BC_4
     b: Node_C_1
-  - a: Node_AC_1
-    b: Node_C_1
-  - a: Node_Start
-    b: Node_C_1
-  - a: Node_End
-    b: Node_B_3
+  - a: Node_BA_5
+    b: Node_BA_3
+  - a: Node_AB_5
+    b: Node_BA_3
+  - a: Node_B_6
+    b: Node_B_1
   nextLinearLevelDialogueGraph: {fileID: 11400000, guid: 862f8c2f288ad9645b59f4658993806a, type: 2}
   nextHubAndBranchDialogueGraph: {fileID: 11400000, guid: d6718e67ab7a3154990b6bcab09209de, type: 2}
   levelPrefab: {fileID: 849973786407378163, guid: 336b5ff267481b347ab1519feb94ebb3, type: 3}
