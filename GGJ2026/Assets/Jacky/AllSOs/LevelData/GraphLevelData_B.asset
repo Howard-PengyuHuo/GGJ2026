@@ -19,16 +19,131 @@ MonoBehaviour:
   initialActivatedRegions: 
   nodes:
   - id: Node_A_1
-    color: 1
-    allRegions: 
+    color: 0
+    allRegions: 01000000
   - id: Node_Start
     color: 3
     allRegions: 00000000
   - id: Node_End
     color: 3
     allRegions: 00000000
+  - id: Node_A_2
+    color: 0
+    allRegions: 01000000
+  - id: Node_A_3
+    color: 0
+    allRegions: 01000000
+  - id: Node_AB_4
+    color: 1
+    allRegions: 0100000002000000
+  - id: Node_A_5
+    color: 1
+    allRegions: 01000000
+  - id: Node_B_1
+    color: 0
+    allRegions: 02000000
+  - id: Node_B_2
+    color: 0
+    allRegions: 02000000
+  - id: Node_B_3
+    color: 0
+    allRegions: 02000000
+  - id: Node_B_4
+    color: 1
+    allRegions: 02000000
+  - id: Node_C_1
+    color: 0
+    allRegions: 02000000
+  - id: Node_C_2
+    color: 1
+    allRegions: 03000000
+  - id: Node_C_3
+    color: 4
+    allRegions: 03000000
+  - id: Node_CB_4
+    color: 4
+    allRegions: 0300000002000000
+  - id: Node_C_5
+    color: 4
+    allRegions: 03000000
+  - id: Node_CA_6
+    color: 5
+    allRegions: 0300000001000000
+  - id: Node_C_7
+    color: 5
+    allRegions: 03000000
+  - id: Node_BC_5
+    color: 0
+    allRegions: 0200000003000000
   edges:
-  - a: 
-    b: 
+  - a: Node_Start
+    b: Node_A_1
+  - a: Node_Start
+    b: Node_CB_4
+  - a: Node_A_3
+    b: Node_CB_4
+  - a: Node_CB_4
+    b: Node_C_2
+  - a: Node_CB_4
+    b: Node_B_4
+  - a: Node_C_2
+    b: Node_B_4
+  - a: Node_B_4
+    b: Node_A_5
+  - a: Node_B_4
+    b: Node_C_5
+  - a: Node_A_5
+    b: Node_A_1
+  - a: Node_A_5
+    b: Node_A_1
+  - a: Node_C_1
+    b: Node_A_1
+  - a: Node_BC_5
+    b: Node_B_2
+  - a: Node_BC_5
+    b: Node_AB_4
+  - a: Node_AB_4
+    b: Node_A_2
+  - a: Node_A_2
+    b: Node_End
+  - a: Node_C_3
+    b: Node_End
+  - a: Node_C_3
+    b: Node_B_3
+  - a: Node_C_3
+    b: Node_B_1
+  - a: Node_B_3
+    b: Node_C_5
+  - a: Node_CA_6
+    b: Node_A_2
+  - a: Node_A_5
+    b: Node_B_1
+  - a: Node_C_5
+    b: Node_CA_6
+  - a: Node_C_3
+    b: Node_CA_6
+  - a: Node_B_3
+    b: Node_CA_6
+  - a: Node_C_2
+    b: Node_CA_6
+  - a: Node_C_1
+    b: Node_A_3
+  - a: Node_C_1
+    b: Node_BC_5
+  - a: Node_C_7
+    b: Node_BC_5
+  - a: Node_C_7
+    b: Node_A_2
+  - a: Node_CA_6
+    b: Node_C_7
+  - a: Node_A_3
+    b: Node_A_1
+  - a: Node_A_5
+    b: Node_B_2
+  - a: Node_AB_4
+    b: Node_B_1
+  - a: Node_C_5
+    b: Node_B_1
   nextLinearLevelDialogueGraph: {fileID: 0}
   nextHubAndBranchDialogueGraph: {fileID: 0}
+  levelPrefab: {fileID: 2481859838288261777, guid: d32c4e2ca68c26a4986b3e914787c185, type: 3}
