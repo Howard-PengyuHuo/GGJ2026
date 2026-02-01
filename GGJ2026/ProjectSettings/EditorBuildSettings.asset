@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Jacky/Scene_Jacky/Scene_Open.unity
+    guid: 1712059da034a3e4c8991ae9a462b32f
+  - enabled: 1
+    path: Assets/Jacky/Scene_Jacky/Scene_Demo.unity
+    guid: 654124cecd2156b4faf8949350d35e32
+  - enabled: 1
+    path: Assets/Jacky/Scene_Jacky/Scene_End.unity
+    guid: 0e7837255480cbd4d9f6d27ed113f8ee
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:

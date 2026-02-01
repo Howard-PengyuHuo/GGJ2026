@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("References")]
@@ -48,8 +48,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T)) { 
-            PlayFailedDialogueThenResumeCurrent(0);
+        if (Input.GetKeyDown(KeyCode.T)) {
+            //PlayFailedDialogueThenResumeCurrent(0);
+            SceneManager.LoadScene(2);
         }
     }
 
