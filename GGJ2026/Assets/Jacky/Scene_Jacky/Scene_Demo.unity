@@ -2440,9 +2440,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueSystem: {fileID: 1295995345}
   sequence:
+  - {fileID: 11400000, guid: e6fc498a7d43d314cb63b26b9ef7f39c, type: 2}
+  - {fileID: 11400000, guid: d6718e67ab7a3154990b6bcab09209de, type: 2}
   - {fileID: 11400000, guid: 1620f0a94ba731242b7bb1d5018010e9, type: 2}
   - {fileID: 11400000, guid: 769418930080f1449aa5ca019af6e653, type: 2}
-  - {fileID: 11400000, guid: d6718e67ab7a3154990b6bcab09209de, type: 2}
+  - {fileID: 11400000, guid: 862f8c2f288ad9645b59f4658993806a, type: 2}
   failGraphA: {fileID: 11400000, guid: 1620f0a94ba731242b7bb1d5018010e9, type: 2}
   failGraphB: {fileID: 0}
   sequenceStartIndexOnFail: 0

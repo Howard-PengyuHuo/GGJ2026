@@ -57,6 +57,10 @@ public class StartEndManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.U)) { 
+            SceneManager.LoadScene("Scene_Open");
+        }
+
         if (!_isActiveCutscene || _isLoading) return;
 
         bool advance =

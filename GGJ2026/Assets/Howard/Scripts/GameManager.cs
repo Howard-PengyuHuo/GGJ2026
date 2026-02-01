@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
 
         if (_index >= sequence.Count) {
             Debug.Log("[GameManager] All Sequence Finished, End This Game");
-            SceneManager.LoadScene(2);
+            LoadEndingScenes(3);
             return;
         }
 
@@ -186,16 +186,9 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    public void EnterFailScene(int failIndex)
+    public void LoadEndingScenes(int sceneIndex)
     {
-        if (failIndex == 0)
-        {
-            SceneManager.LoadScene(3);
-        }
-        else if (failIndex == 1)
-        {
-            SceneManager.LoadScene(2);
-        }
+        SceneManager.LoadScene(sceneIndex);
     }
 
 
