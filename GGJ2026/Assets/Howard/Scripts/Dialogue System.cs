@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DialogueSystem : MonoBehaviour
@@ -553,4 +554,50 @@ public class DialogueSystem : MonoBehaviour
         //Play(nextGraph, null);
         
     }
+
+
+    // ================= Choice repeat tracking (runtime) =================
+    private readonly Dictionary<string, int> _choicePickCounts = new Dictionary<string, int>(256);
+
+    private string BuildChoiceKey(DialogueGraph graph, DialogueNode node, DialogueChoice choice)
+    {
+        // Prefer stable identity: graph asset + node id + choice index in that node.
+        // This avoids collisions when multiple nodes share same text/nextId.
+        var graphKey = graph != null ? graph.name : "nullGraph";
+        var nodeKey = node != null ? node.id : "nullNode";
+
+        var index = -1;
+        if (node != null && node.choices != null && choice != null)
+            index = node.choices.IndexOf(choice);
+
+        return $"{graphKey}|{nodeKey}|{index}";
+    }
+
+    /// <summary>
+    /// Returns how many times the player has picked this choice (in current DialogueSystem lifetime / since last clear).
+    /// </summary>
+    public int GetChoicePickCount(DialogueChoice choice)
+    {
+        var key = BuildChoiceKey(_graph, _current, choice);
+        return _choicePickCounts.TryGetValue(key, out var c) ? c : 0;
+    }
+
+    /// <summary>
+    /// Clears all pick counts (call when you want a fresh session).
+    /// </summary>
+    public void ClearChoicePickCounts()
+    {
+        _choicePickCounts.Clear();
+    }
+
+    private int IncrementChoicePickCount(DialogueChoice choice)
+    {
+        var key = BuildChoiceKey(_graph, _current, choice);
+
+        _choicePickCounts.TryGetValue(key, out var current);
+        current++;
+        _choicePickCounts[key] = current;
+        return current;
+    }
+    // ===================================================================
 }

@@ -25,7 +25,15 @@ public class PotionBehaviour : MonoBehaviour
 
     private void OnEnable()
     {
+        //var inv = PotionInventoryManager.Instance;
+        //if (inv != null) inv.RegisterWorldPotion(this);
+        Invoke(nameof(RegisterToPotionManager), 1f);
+    }
+
+    private void RegisterToPotionManager()
+    {
         var inv = PotionInventoryManager.Instance;
+        if (inv == null) { Debug.LogWarning($"Failed To Register to PotionInventoryManager"); }
         if (inv != null) inv.RegisterWorldPotion(this);
     }
 
@@ -51,7 +59,7 @@ public class PotionBehaviour : MonoBehaviour
         _originalOrder = _sr.sortingOrder;
         _sr.sortingOrder = SortingOrderUtility.GetNextTopOrder();
 
-        Debug.Log($"PotionBehaviour: BringToFront " + potionId + " new order: " + _sr.sortingOrder);
+        //Debug.Log($"PotionBehaviour: BringToFront " + potionId + " new order: " + _sr.sortingOrder);
     }
 
     /// <summary>

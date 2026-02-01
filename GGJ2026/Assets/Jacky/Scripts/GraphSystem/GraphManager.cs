@@ -477,7 +477,7 @@ public class GraphManager : MonoBehaviour
         OnActivatedRegionsChanged?.Invoke(activatedRegions);
     }
 
-    private void OnSelectedPotionChanged(string potionId)
+    private void OnSelectedPotionChanged(string potionId, int count)
     {
         Debug.Log("[GraphManager] OnSelectedPotionChanged: " + potionId);
 

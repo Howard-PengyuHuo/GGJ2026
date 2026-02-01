@@ -160,12 +160,8 @@ MonoBehaviour:
   - a: Node_B_1
     b: Node_B_2
   - a: Node_B_2
-    b: Node_BC_7
-  - a: Node_BC_7
-    b: Node_A_4
-  - a: Node_BC_7
-    b: Node_A_4
-  - a: Node_BC_7
+    b: Node_B_7
+  - a: Node_B_7
     b: Node_A_4
   - a: Node_AB_5
     b: Node_A_4

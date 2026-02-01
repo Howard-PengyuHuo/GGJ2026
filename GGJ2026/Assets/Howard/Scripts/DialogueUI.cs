@@ -13,6 +13,8 @@ public class DialogueUI : MonoBehaviour
     public Transform choicesParent;
     public Button choiceButtonPrefab;
 
+    public GameObject choicePanelPrefab;
+
     [Header("Speaker UI")] 
     public Image playerPortrait;
     public Image npcPortrait;
@@ -114,25 +116,73 @@ public class DialogueUI : MonoBehaviour
 
     public void ShowChoices(List<DialogueChoice> choices, Action<DialogueChoice> onChoiceClick)
     {
+        //_onChoiceClick = onChoiceClick;
+        
+        //if(choicesParent == null || choiceButtonPrefab == null)
+        //    return;
+        
+        //choicesParent.gameObject.SetActive(true);
+        //ClearChoices();
+        
+        //if(choices == null) return;
+
+        //foreach (var choice in choices)
+        //{
+        //    //var btn = Instantiate(choiceButtonPrefab, choicesParent);
+
+        //    //var label = btn.GetComponentInChildren<TMP_Text>();
+        //    //if (label != null) label.text = choice.text;
+
+        //    //btn.onClick.RemoveAllListeners();
+        //    //btn.onClick.AddListener(() => _onChoiceClick?.Invoke(choice));
+
+        //    var panelInstance = Instantiate(choicePanelPrefab, choicesParent);
+        //    Button button = panelInstance.GetComponentInChildren<Button>();
+
+        //    var label = panelInstance.GetComponentInChildren<TMP_Text>();
+        //    if (label != null) label.text = choice.text;
+
+        //    button.onClick.RemoveAllListeners();
+        //    button.onClick.AddListener(() => _onChoiceClick?.Invoke(choice));
+        //}
+
         _onChoiceClick = onChoiceClick;
-        
-        if(choicesParent == null || choiceButtonPrefab == null)
+
+        if (choicesParent == null)
+        {
+            Debug.LogWarning("[DialogueUI] ShowChoices: choicesParent is null.", this);
             return;
-        
+        }
+
+        if (choicePanelPrefab == null)
+        {
+            Debug.LogWarning("[DialogueUI] ShowChoices: choicePanelPrefab is null (not assigned in Inspector).", this);
+            return;
+        }
+
         choicesParent.gameObject.SetActive(true);
         ClearChoices();
-        
-        if(choices == null) return;
+
+        if (choices == null || choices.Count == 0)
+            return;
 
         foreach (var choice in choices)
         {
-            var btn = Instantiate(choiceButtonPrefab, choicesParent);
-            
-            var label = btn.GetComponentInChildren<TMP_Text>();
+            var panelInstance = Instantiate(choicePanelPrefab, choicesParent);
+
+            var button = panelInstance.GetComponentInChildren<Button>(true);
+            if (button == null)
+            {
+                Debug.LogError("[DialogueUI] ShowChoices: choicePanelPrefab has no Button in children.", panelInstance);
+                continue;
+            }
+
+            var label = panelInstance.GetComponentInChildren<TMP_Text>(true);
+            //Debug.Log($"[DialogueUI] ShowChoices: choice text = {choice.text}; label is none {label == null}");
             if (label != null) label.text = choice.text;
-            
-            btn.onClick.RemoveAllListeners();
-            btn.onClick.AddListener(() => _onChoiceClick?.Invoke(choice));
+
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => _onChoiceClick?.Invoke(choice));
         }
     }
 }

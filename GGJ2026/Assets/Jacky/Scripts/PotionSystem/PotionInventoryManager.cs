@@ -17,6 +17,8 @@ public class PotionInventoryManager : MonoBehaviour
     public PotionDatabase database;
 
     [Header("Initial Inventory")]
+    public int maxPotionAmount = 7;
+
     public List<Entry> initialInventory = new();
 
     private readonly Dictionary<string, int> _counts = new();
@@ -28,7 +30,7 @@ public class PotionInventoryManager : MonoBehaviour
     public string SelectedPotionId { get; private set; }
 
     // EVENTS —— 只暴露 potionId
-    public event Action<string> OnSelectedPotionChanged;
+    public event Action<string, int> OnSelectedPotionChanged;
     public event Action<string, int> OnPotionCountChanged;
     public event Action OnInventoryChanged;
 
@@ -103,7 +105,7 @@ public class PotionInventoryManager : MonoBehaviour
     public bool SetSelectedPotion(string potionId)
     {
         if (string.IsNullOrEmpty(potionId)) return false;
-        if (!_counts.ContainsKey(potionId)) return false;
+        //if (!_counts.ContainsKey(potionId)) return false;
 
         if (SelectedPotionId == potionId)
         {
@@ -113,9 +115,18 @@ public class PotionInventoryManager : MonoBehaviour
 
         SelectedPotionId = potionId;
         ApplyWorldSelectionHighlight(potionId);
-        OnSelectedPotionChanged?.Invoke(potionId);
+
+        var count = GetCount(potionId);
+        OnSelectedPotionChanged?.Invoke(potionId,count);
         return true;
     }
+
+    /// <summary>
+    ///显示对应的ui的数量变化
+    /// </summary>
+    /// <param name="potionId"></param>
+    /// <param name="amount"></param>
+    /// <returns></returns>
 
     public bool TryConsume(string potionId, int amount = 1)
     {
@@ -139,10 +150,20 @@ public class PotionInventoryManager : MonoBehaviour
         if (!_defs.ContainsKey(potionId)) return;
         _counts.TryGetValue(potionId, out var c);
         c += amount;
+        c = Mathf.Min(c, maxPotionAmount);
         _counts[potionId] = c;
         OnPotionCountChanged?.Invoke(potionId, c);
         OnInventoryChanged?.Invoke();
     }
+
+    public void RefillPotions()
+    {
+        Add("P_BND-delta3", maxPotionAmount);
+        Add("P_Herschline", maxPotionAmount);
+        Add("P_Ludopeptide", maxPotionAmount);
+        Add("P_Myel-9", maxPotionAmount);
+    }
+
 
     // ---------------- NEW: world potion registry & highlight ----------------
 
