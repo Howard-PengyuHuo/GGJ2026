@@ -90,49 +90,6 @@ public class DialogueSystem : MonoBehaviour
             HandleAdvance();
     }
     
-    ///// <summary>
-    ///// 播放任意 Graph(Intro/NPC/Outro) 如果是linear,播完会调用onFinished.
-    ///// 如果是HubAndBranch,外部在合适时机StopDialogue().
-    ///// </summary>
-    //public void Play(DialogueGraph graph, Action onFinished = null)
-    //{
-    //    if (graph == null)
-    //    {
-    //        Debug.LogError("DialogueSystem.Play: graph is null");
-    //        return;
-    //    }
-
-    //    //_nextLevelData = graph.nextLevelData;
-    //    //Debug.Log($"[Dialogue System] Next Level Data is {graph.nextLevelData.name}");
-
-    //    _graph = graph;
-    //    _onFinished = onFinished;
-
-    //    if (ui != null)
-    //    {
-    //        ui.SetNpc(graph.npcProfile);
-            
-    //        ui.SetSpeakerVisible(graph.showSpeakerUI);
-    //        ui.HideChoices();
-    //        ui.SetNpcText("");
-    //    }
-
-    //    var startId = graph.startId;
-    //    if (string.IsNullOrEmpty(startId))
-    //    {
-    //        if (graph.mode == DialogueMode.HubAndBranch && !string.IsNullOrEmpty(graph.hubId))
-    //        {
-    //            GoTo(graph.hubId);
-    //            return;
-    //        }
-
-    //        EndDialogue();
-    //        return;
-    //    }
-        
-    //    GoTo(startId);
-    //}
-
 
     /// <summary>
     /// Plays a DialogueGraph. DialogueSystem is ONLY responsible for playback.
@@ -172,7 +129,7 @@ public class DialogueSystem : MonoBehaviour
                 GoTo(graph.hubId);
                 return;
             }
-
+            Debug.LogWarning($"[DialogueSystem.Play] : Graph {graph.name} startId is empty");
             EndDialogue(naturalEnd: true);
             return;
         }
@@ -180,61 +137,15 @@ public class DialogueSystem : MonoBehaviour
         GoTo(startId);
     }
 
-    //public void PlayNPC(DialogueGraph npcgraph)
-    //{
-    //    if (npcgraph == null)
-    //    {
-    //        Debug.LogError("DialogueSystem.PlayNPC: npcgraph is null");
-    //        return;
-    //    }
-
-    //    //_nextLevelData = npcgraph.nextLevelData;
-    //    Debug.Log($"[Dialogue System] Next Level Data is {npcgraph.nextLevelData.name}");
-    //    graphManager.BuildLevelWLevelData(npcgraph.nextLevelData);
-
-
-    //    npcgraph.mode = DialogueMode.HubAndBranch;
-
-    //    if (!string.IsNullOrEmpty(npcgraph.hubId))
-    //    {
-    //        Play(npcgraph,null);
-    //        GoTo(npcgraph.hubId);
-    //    }
-    //    else
-    //    {
-    //        Play(npcgraph,null);
-    //    }
-    //}
-
-
     /// <summary>
     /// Force stop current dialogue immediately (no "finished" callback).
     /// </summary>
     public void Interrupt()
     {
         if (_graph == null) return;
+        Debug.Log("[DialogueSystem] Interrupting current dialogue.");
         EndDialogue(naturalEnd: false);
     }
-
-    //public void StopDialogue()
-    //{
-    //    EndDialogue();
-    //}
-
-    //private void GoTo(string id)
-    //{
-    //    if(_graph == null) return;
-
-    //    var node = _graph.Get(id);
-    //    if (node == null)
-    //    {
-    //        Debug.LogError($"Dialogue node not found: {id}");
-    //        EndDialogue();
-    //        return;
-    //    }
-
-    //    EnterNode(node);
-    //}
 
     private void GoTo(string id)
     {
@@ -339,31 +250,6 @@ public class DialogueSystem : MonoBehaviour
         }
     }
 
-    //private void AdvanceAfterLineComplete()
-    //{
-    //    Debug.Log($"[Dialogue] node={_current?.id}, choices={(_current?.choices==null?0:_current.choices.Count)}, nextId={_current?.nextId}");
-        
-    //    if(_graph == null || _current == null) return;
-
-    //    if (_current.choices != null && _current.choices.Count > 0)
-    //    {
-    //        _state = NodeState.Choosing;
-    //        if (ui != null)
-    //        {
-    //            ui.SetSpeakerToPlayer();
-    //            ui.ShowChoices(_current.choices, OnChoiceClicked);
-    //        }
-    //        return;
-    //    }
-        
-    //    if(!string.IsNullOrEmpty(_current.nextId))
-    //    {
-    //        GoTo(_current.nextId);
-    //        return;
-    //    }
-
-    //    EndDialogue();
-    //}
     private void AdvanceAfterLineComplete()
     {
         if (_graph == null || _current == null) return;
@@ -384,54 +270,9 @@ public class DialogueSystem : MonoBehaviour
             GoTo(_current.nextId);
             return;
         }
-
+        Debug.Log($"[DialogueSystem] Reached end of dialogue graph {_graph.name} at node {_current.id}");
         EndDialogue(naturalEnd: true);
     }
-
-
-    //private void OnChoiceClicked(DialogueChoice choice)
-    //{
-    //    if(_graph == null) return;
-    //    if(choice == null) return;
-
-    //    if (ui != null)
-    //    {
-    //        ui.HideChoices();
-    //        ui.SetSpeakerToNPC();
-    //    }
-
-    //    if (_graph.mode == DialogueMode.HubAndBranch && choice.backToHub)
-    //    {
-    //        if (string.IsNullOrEmpty(_graph.hubId))
-    //        {
-    //            Debug.LogError("Choice.backToHub = true but graph.hubId is empty");
-    //            EndDialogue();
-    //            return;
-    //        }
-
-    //        GoTo(_graph.hubId);
-    //        return;
-    //    }
-
-    //    if (string.IsNullOrEmpty(choice.nextId))
-    //    {
-    //        Debug.LogError("Choice nextId is empty");
-    //        EndDialogue();
-    //        return;
-    //    }
-
-    //    GoTo(choice.nextId);
-
-    //    //这边添加GraphManager.UpdateRegion;
-    //    if (graphManager == null) { 
-    //        Debug.LogWarning("GraphManager is not assigned in DialogueSystem.");
-    //        return;
-    //    }
-
-    //    graphManager.SetActivatedRegion(
-    //        new List<RegionId> { choice.regionId }
-    //    );
-    //}
 
     private void OnChoiceClicked(DialogueChoice choice)
     {
@@ -481,40 +322,6 @@ public class DialogueSystem : MonoBehaviour
         GoTo(choice.nextId);
     }
 
-
-    //private void EndDialogue()
-    //{
-    //    if (_typingCo != null)
-    //    {
-    //        StopCoroutine(_typingCo);
-    //        _typingCo = null;
-    //    }
-
-    //    _requestSkipTyping = false;
-
-    //    if (ui != null)
-    //    {
-    //        ui.HideChoices();
-    //        ui.SetNpcText("");
-    //    }
-
-    //    var finished = _onFinished;
-
-    //    _graph = null;
-    //    _current = null;
-    //    _onFinished = null;
-
-    //    finished?.Invoke();
-
-    //    //if (_nextLevelData == null)
-    //    //{
-    //    //    graphManager.ClearLevel();
-    //    //}
-    //    //else {
-    //    //    graphManager.BuildLevelWLevelData(_nextLevelData);
-    //    //}
-    //}
-
     private void EndDialogue(bool naturalEnd)
     {
         var endedGraph = _graph;
@@ -552,21 +359,6 @@ public class DialogueSystem : MonoBehaviour
 
     private void OnLevelFinished(GraphLevelData levelData)
     {
-        //if (levelData == null)
-        //{
-        //    Debug.LogWarning("[DialogueSystem] PlayNextDialogue: levelData is null");
-        //    return;
-        //}
-        //var nextGraph = levelData.nextLinearLevelDialogueGraph;
-
-        //Debug.Log($"[DialogueSystem] PlayNextDialogue: nextGraph is {(nextGraph == null ? "null" : nextGraph.name)}");
-
-        //if (nextGraph == null)
-        //{
-        //    Debug.LogWarning("[DialogueSystem] PlayNextDialogue: nextGraph is null");
-        //    return;
-        //}
-        //Play(nextGraph, null);
         ClearChoicePickCounts();
     }
 
@@ -608,6 +400,9 @@ public class DialogueSystem : MonoBehaviour
 
     private int IncrementChoicePickCount(DialogueChoice choice)
     {
+        // Choices that go back to hub don't count towards repeats.
+        if (choice.backToHub == true) { return 0; }
+
         var key = BuildChoiceKey(_graph, _current, choice);
 
         _choicePickCounts.TryGetValue(key, out var current);

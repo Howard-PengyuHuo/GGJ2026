@@ -83,7 +83,7 @@ MonoBehaviour:
   - id: 2.3
     npcLine: ...As I said, they were all... dependable. At least no mistakes happened
       after I took over. They've all been reassigned to other districts now.
-    nextId: 
+    nextId: 2.3.0
     choices: []
   - id: 2.3.0
     npcLine: 
@@ -114,7 +114,7 @@ MonoBehaviour:
   - id: 1.2
     npcLine: "Yes, a day worth marking. It\u2019s been ten years. The factory has
       been operated smoothly for a whole decade."
-    nextId: 
+    nextId: 1.2.0
     choices: []
   - id: 1.2.0
     npcLine: 
@@ -166,7 +166,7 @@ MonoBehaviour:
   - id: 3
     npcLine: My mother was the previous manager. She stepped down ten years ago,
       and I took over.
-    nextId: 
+    nextId: 3.0
     choices: []
   - id: 3.0
     npcLine: 
@@ -183,14 +183,14 @@ MonoBehaviour:
   - id: 3.1
     npcLine: "She doesn\u2019t come into the workshop much these days. Says the soles
       pick up iron dust, and the wooden floors at home creak. It leaves scratches."
-    nextId: 
+    nextId: 3.10
     choices: []
   - id: 3.10
     npcLine: 
     nextId: 
     choices:
     - text: What has your mom talked to you about lately?
-      nextId: 
+      nextId: 3.4
       backToHub: 0
       regionId: 3
     - text: Let's discuss something else.
@@ -206,7 +206,7 @@ MonoBehaviour:
     choices: []
   - id: 3.20
     npcLine: 
-    nextId: 3.20
+    nextId: 
     choices:
     - text: Past technicians?
       nextId: 2.3
