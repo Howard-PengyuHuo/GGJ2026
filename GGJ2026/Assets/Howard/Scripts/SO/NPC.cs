@@ -8,5 +8,6 @@ public class NPC : ScriptableObject
     public Sprite portraitOffSpeak;
     public Sprite portraitOnSpeak;
 
+    [TextArea(1,10)]
     public string npcDescription;
 }

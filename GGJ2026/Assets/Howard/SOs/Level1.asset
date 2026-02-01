@@ -270,5 +270,5 @@ MonoBehaviour:
       backToHub: 0
       regionId: 2
   npcProfile: {fileID: 11400000, guid: ade9926376cdf4b4d9186164ce138ef6, type: 2}
-  showSpeakerUI: 0
+  showSpeakerUI: 1
   nextLevelData: {fileID: 11400000, guid: 96ffd9856f8985344a77fc43ff6b5067, type: 2}

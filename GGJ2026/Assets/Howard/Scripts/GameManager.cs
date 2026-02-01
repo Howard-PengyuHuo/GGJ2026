@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("[GameManager] OnGraphLevelFinished received in GameManager.");
         dialogueSystem.Interrupt();
+        //dialogueSystem.ui.SetSpeakerVisible(false);
         PlayNext();
     }
 
@@ -109,11 +110,13 @@ public class GameManager : MonoBehaviour
         if (_index < 0)
         {
             Debug.Log("[GameManager] index<0; Sequence finished.");
-            return;
+            _index = 0;
+            //return;
         }
 
         if (_index >= sequence.Count) {
             Debug.Log("[GameManager] All Sequence Finished, End This Game");
+            SceneManager.LoadScene(2);
             return;
         }
 

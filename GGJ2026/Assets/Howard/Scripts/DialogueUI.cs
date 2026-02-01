@@ -19,31 +19,41 @@ public class DialogueUI : MonoBehaviour
 
     [Header("Speaker UI")] 
     public Image playerPortrait;
-    public Image npcPortrait;
-    public TMP_Text nameText;
+    //public Image npcPortrait;
     public GameObject speakerRoot;
     private bool _speakerVisible = true;
-    
+
+    [Header("New Spearker UI")]
+    public GameObject repeatCountPanel;
+
+    public TMP_Text nameText;
+    public TMP_Text npcDetail;
+    public Image npcPortrait;
+
     private Action<DialogueChoice> _onChoiceClick;
     private NPC _currentNpc;
 
     public void SetSpeakerVisible(bool visible)
     {
         _speakerVisible = visible;
-        
-        if(speakerRoot != null) {speakerRoot.SetActive(visible);}
+
+        if (speakerRoot != null) { speakerRoot.SetActive(visible); }
 
         if (!visible)
         {
-            if(nameText != null) nameText.text = "";
+            if (nameText != null) nameText.text = "";
             if (playerPortrait != null) playerPortrait.enabled = false;
             if (npcPortrait != null) npcPortrait.enabled = false;
+            if(repeatCountPanel!=null) repeatCountPanel.SetActive(false);
         }
         else
         {
             if (playerPortrait != null) playerPortrait.enabled = true;
             if (npcPortrait != null) npcPortrait.enabled = true;
+            if (repeatCountPanel != null) repeatCountPanel.SetActive(true);
         }
+        // Always show speaker UI for new design
+        //_speakerVisible = true; 
     }
     
     public void SetNpc(NPC npc)
@@ -53,44 +63,59 @@ public class DialogueUI : MonoBehaviour
         if (npcPortrait != null)
         {
             npcPortrait.sprite = npc != null ? npc.portraitOffSpeak : null;
-            npcPortrait.enabled = (npc != null && npc.portraitOffSpeak != null);
+            //npcPortrait.enabled = (npc != null && npc.portraitOffSpeak != null);
+        }
+        if (npcDetail != null)
+        {
+            npcDetail.text = npc != null ? npc.npcDescription : "";
+        }
+        if (nameText != null)
+        {
+            nameText.text = npc != null && !string.IsNullOrEmpty(npc.npcName) ? npc.npcName : "";
         }
     }
 
     public void SetSpeakerToNPC()
     {
         if(!_speakerVisible) return;
-        
-        if(npcPortrait != null) npcPortrait.enabled = true;
-        if(playerPortrait != null) playerPortrait.enabled = false;
-        
-        if (nameText != null)
-            nameText.text = _currentNpc != null && !string.IsNullOrEmpty(_currentNpc.npcName)
-                ? _currentNpc.npcName
-                : "";
 
-        if (npcPortrait != null)
-            npcPortrait.color = Color.white;
+        //if(npcPortrait != null) npcPortrait.enabled = true;
+        //if(playerPortrait != null) playerPortrait.enabled = false;
 
-        if (playerPortrait != null)
-            playerPortrait.color = new Color(1f, 1f, 1f, 0.35f);
+        //if (nameText != null)
+        //    nameText.text = _currentNpc != null && !string.IsNullOrEmpty(_currentNpc.npcName)
+        //        ? _currentNpc.npcName
+        //        : "";
+
+        //if (npcPortrait != null)
+        //    npcPortrait.color = Color.white;
+
+        //if (playerPortrait != null)
+        //    playerPortrait.color = new Color(1f, 1f, 1f, 0.35f);
+        if (npcPortrait != null) { 
+            npcPortrait.sprite = _currentNpc != null ? _currentNpc.portraitOnSpeak : null;
+        }
     }
 
     public void SetSpeakerToPlayer()
     {
         if (!_speakerVisible) return;
 
-        if(npcPortrait != null) npcPortrait.enabled = false;
-        if (playerPortrait != null) playerPortrait.enabled = true;
-        
-        if (nameText != null)
-            nameText.text = "Player";
+        //if(npcPortrait != null) npcPortrait.enabled = false;
+        //if (playerPortrait != null) playerPortrait.enabled = true;
 
-        if (playerPortrait != null)
-            playerPortrait.color = Color.white;
+        //if (nameText != null)
+        //    nameText.text = "Player";
 
+        //if (playerPortrait != null)
+        //    playerPortrait.color = Color.white;
+
+        //if (npcPortrait != null)
+        //    npcPortrait.color = new Color(1f, 1f, 1f, 0.35f);
         if (npcPortrait != null)
-            npcPortrait.color = new Color(1f, 1f, 1f, 0.35f);
+        {
+            npcPortrait.sprite = _currentNpc != null ? _currentNpc.portraitOffSpeak : null;
+        }
     }
     
     public void SetNpcText(string text)
