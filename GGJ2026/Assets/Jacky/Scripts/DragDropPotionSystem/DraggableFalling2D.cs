@@ -4,7 +4,7 @@ using UnityEngine;
 public class DraggableFalling2D : MonoBehaviour
 {
     [Header("Reference")]
-    public DragBounds2D bounds; // 可以不填，自动 FindObjectOfType
+    public DragBounds2D bounds;
 
     [Header("Gravity")]
     public float gravity = 20f;
@@ -12,6 +12,10 @@ public class DraggableFalling2D : MonoBehaviour
 
     [Header("Drag")]
     public float followSpeed = 30f;
+
+    [Header("Raycast")]
+    [Tooltip("Only layers in this mask can be grabbed. Put Potion objects on a dedicated layer and include it here.")]
+    [SerializeField] private LayerMask dragHitMask = ~0;
 
     private Camera cam;
     private Collider2D _col;
@@ -22,7 +26,6 @@ public class DraggableFalling2D : MonoBehaviour
 
     private SpriteRenderer sr;
 
-    // NEW
     private PotionBehaviour _potion;
 
     private void Awake()
@@ -32,7 +35,6 @@ public class DraggableFalling2D : MonoBehaviour
         sr = GetComponentInChildren<SpriteRenderer>();
         _col = GetComponent<Collider2D>();
 
-        // NEW
         _potion = GetComponent<PotionBehaviour>();
     }
 
@@ -40,7 +42,6 @@ public class DraggableFalling2D : MonoBehaviour
     {
         if (bounds == null || cam == null) return;
 
-        // --- mouse down: start drag if hit THIS object ---
         if (Input.GetMouseButtonDown(0))
         {
             if (HitThisObject())
@@ -51,16 +52,13 @@ public class DraggableFalling2D : MonoBehaviour
                 Vector3 mouseWorld = GetMouseWorld();
                 grabOffset = transform.position - mouseWorld;
 
-                // NEW: bring to front + select
                 if (_potion != null)
                 {
                     _potion.BringToFront();
-                    //_potion.SelectThisPotion();
                 }
             }
         }
 
-        // --- mouse up: stop drag ---
         if (Input.GetMouseButtonUp(0))
         {
             if (isDragging && _potion != null)
@@ -99,8 +97,7 @@ public class DraggableFalling2D : MonoBehaviour
     private bool HitThisObject()
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
-
+        RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, dragHitMask);
         return hit.collider != null && hit.collider == _col;
     }
 
@@ -116,7 +113,7 @@ public class DraggableFalling2D : MonoBehaviour
     {
         if (sr != null && sr.sprite != null)
         {
-            var b = sr.bounds; // world space
+            var b = sr.bounds;
             return new Vector2(b.extents.x, b.extents.y);
         }
 

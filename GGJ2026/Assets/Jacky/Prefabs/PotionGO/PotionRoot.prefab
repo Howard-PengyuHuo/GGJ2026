@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4165391054306636054}
   - component: {fileID: 5321818418225540516}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PotionHighlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3034876548663123958}
   - component: {fileID: 3502760878254311280}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PotionVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,7 +186,7 @@ GameObject:
   - component: {fileID: 6626268961779316560}
   - component: {fileID: 6391431353682458489}
   - component: {fileID: 65966916188179509}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PotionRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -272,6 +272,9 @@ MonoBehaviour:
   gravity: 20
   maxFallSpeed: 15
   followSpeed: 150
+  dragHitMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &65966916188179509
 MonoBehaviour:
   m_ObjectHideFlags: 0

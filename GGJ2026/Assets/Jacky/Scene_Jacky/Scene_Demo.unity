@@ -2564,6 +2564,10 @@ PrefabInstance:
       propertyPath: bounds
       value: 
       objectReference: {fileID: 149130785}
+    - target: {fileID: 1595488352110016569, guid: da16fc8c364c1fa4dbd4cca67054dddc, type: 3}
+      propertyPath: dragHitMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 2773111086769956573, guid: da16fc8c364c1fa4dbd4cca67054dddc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.77
@@ -2843,6 +2847,10 @@ PrefabInstance:
       propertyPath: bounds
       value: 
       objectReference: {fileID: 149130785}
+    - target: {fileID: 7157211057175227604, guid: a32e578ef3d9adf4b997ffd26fed2e20, type: 3}
+      propertyPath: dragHitMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 7316505190949442838, guid: a32e578ef3d9adf4b997ffd26fed2e20, type: 3}
       propertyPath: m_Name
       value: PotionRoot_Ludopeptide
@@ -3293,6 +3301,10 @@ PrefabInstance:
       propertyPath: bounds
       value: 
       objectReference: {fileID: 149130785}
+    - target: {fileID: 5356132357261965639, guid: ad3b801a8bd8fac4190da5fa5e31fb3c, type: 3}
+      propertyPath: dragHitMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 5516409531726921861, guid: ad3b801a8bd8fac4190da5fa5e31fb3c, type: 3}
       propertyPath: m_Name
       value: PotionRoot_Herschline
@@ -4426,6 +4438,10 @@ PrefabInstance:
       propertyPath: bounds
       value: 
       objectReference: {fileID: 149130785}
+    - target: {fileID: 7322724476873501438, guid: 7278ff52bc07a7d4cb3fd413aa5133c1, type: 3}
+      propertyPath: dragHitMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
