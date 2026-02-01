@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class PotionUIManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class PotionUIManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI curPotionName;
     [SerializeField] private TextMeshProUGUI curPotionDesc;
-    [SerializeField] private GameObject[] curAmountPanel;
+    [SerializeField] private Image[] curAmountPanel;
 
     private void OnEnable()
     {
@@ -66,7 +67,7 @@ public class PotionUIManager : MonoBehaviour
 
     private void SetCountVisual(int count) { 
         for (int i = 0; i < curAmountPanel.Length; i++) {
-            curAmountPanel[i].SetActive(i < count);
+            curAmountPanel[i].enabled = (i < count);
         }
     }
 }

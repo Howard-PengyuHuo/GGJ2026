@@ -12,8 +12,10 @@ public class DialogueUI : MonoBehaviour
     [Header("Choices")] 
     public Transform choicesParent;
     public Button choiceButtonPrefab;
-
     public GameObject choicePanelPrefab;
+
+    [Header("Warning Bar Image")]
+    public Image warningBarImage;
 
     [Header("Speaker UI")] 
     public Image playerPortrait;
@@ -183,6 +185,14 @@ public class DialogueUI : MonoBehaviour
 
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => _onChoiceClick?.Invoke(choice));
+        }
+    }
+
+    public void SetWarningBarFill(float fillAmount)
+    {
+        if (warningBarImage != null)
+        {
+            warningBarImage.fillAmount = Mathf.Clamp01(fillAmount);
         }
     }
 }

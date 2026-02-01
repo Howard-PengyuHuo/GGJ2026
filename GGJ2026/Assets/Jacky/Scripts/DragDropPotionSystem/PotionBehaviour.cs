@@ -80,4 +80,14 @@ public class PotionBehaviour : MonoBehaviour
         Debug.Log("PotionBehaviour: SelectThisPotion found inv");   
         inv.SetSelectedPotion(potionId);
     }
+
+    public void DeselectThisPotion()
+    {
+        var inv = PotionInventoryManager.Instance;
+        if (inv == null) return;
+
+        // Only clear if THIS potion is the currently selected one
+        if (inv.SelectedPotionId == potionId)
+            inv.ClearSelectedPotion();
+    }
 }

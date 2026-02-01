@@ -91,6 +91,9 @@ public class PotionInventoryManager : MonoBehaviour
     // ---------- Public API ----------
     public PotionSO GetPotionDef(string potionId)
     {
+        if (string.IsNullOrEmpty(potionId))
+            return null;
+
         _defs.TryGetValue(potionId, out var so);
         return so;
     }
@@ -119,6 +122,20 @@ public class PotionInventoryManager : MonoBehaviour
         var count = GetCount(potionId);
         OnSelectedPotionChanged?.Invoke(potionId,count);
         return true;
+    }
+
+    public void ClearSelectedPotion()
+    {
+        if (string.IsNullOrEmpty(SelectedPotionId))
+            return;
+
+        SelectedPotionId = null;
+
+        // Clear highlights
+        ApplyWorldSelectionHighlight(selectedPotionId: null);
+
+        // Notify listeners (UI should show "None")
+        OnSelectedPotionChanged?.Invoke(null, 0);
     }
 
     /// <summary>

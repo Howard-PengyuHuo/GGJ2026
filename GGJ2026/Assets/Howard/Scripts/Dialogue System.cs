@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DialogueSystem : MonoBehaviour
@@ -22,7 +23,9 @@ public class DialogueSystem : MonoBehaviour
     
     [Header("Input")]
     public KeyCode advanceKey = KeyCode.Space;
-    
+
+    [Header("Warning")]
+    [SerializeField] private int maxRepeatCount = 5;
     //当前播放内容
     private  DialogueGraph _graph;
     private  DialogueNode _current;
@@ -64,7 +67,7 @@ public class DialogueSystem : MonoBehaviour
 
     private void Start()
     {
-        //Invoke(nameof(SubscribeAll), 0.1f);
+        Invoke(nameof(SubscribeAll), 1f);
     }
 
     private void SubscribeAll()
@@ -72,7 +75,7 @@ public class DialogueSystem : MonoBehaviour
         if (graphManager == null)
         {
             graphManager = GraphManager.Instance;
-            graphManager.OnLevelFinished += PlayNextDialogue;
+            graphManager.OnLevelFinished += OnLevelFinished;
             Debug.Log("[DialogueSystem] Subscribed to GraphManager.OnLevelFinished");
         }
     }   
@@ -177,31 +180,31 @@ public class DialogueSystem : MonoBehaviour
         GoTo(startId);
     }
 
-    public void PlayNPC(DialogueGraph npcgraph)
-    {
-        if (npcgraph == null)
-        {
-            Debug.LogError("DialogueSystem.PlayNPC: npcgraph is null");
-            return;
-        }
+    //public void PlayNPC(DialogueGraph npcgraph)
+    //{
+    //    if (npcgraph == null)
+    //    {
+    //        Debug.LogError("DialogueSystem.PlayNPC: npcgraph is null");
+    //        return;
+    //    }
 
-        //_nextLevelData = npcgraph.nextLevelData;
-        Debug.Log($"[Dialogue System] Next Level Data is {npcgraph.nextLevelData.name}");
-        graphManager.BuildLevelWLevelData(npcgraph.nextLevelData);
+    //    //_nextLevelData = npcgraph.nextLevelData;
+    //    Debug.Log($"[Dialogue System] Next Level Data is {npcgraph.nextLevelData.name}");
+    //    graphManager.BuildLevelWLevelData(npcgraph.nextLevelData);
 
 
-        npcgraph.mode = DialogueMode.HubAndBranch;
+    //    npcgraph.mode = DialogueMode.HubAndBranch;
 
-        if (!string.IsNullOrEmpty(npcgraph.hubId))
-        {
-            Play(npcgraph,null);
-            GoTo(npcgraph.hubId);
-        }
-        else
-        {
-            Play(npcgraph,null);
-        }
-    }
+    //    if (!string.IsNullOrEmpty(npcgraph.hubId))
+    //    {
+    //        Play(npcgraph,null);
+    //        GoTo(npcgraph.hubId);
+    //    }
+    //    else
+    //    {
+    //        Play(npcgraph,null);
+    //    }
+    //}
 
 
     /// <summary>
@@ -434,7 +437,8 @@ public class DialogueSystem : MonoBehaviour
     {
         if (_graph == null) return;
         if (choice == null) return;
-
+        
+        var pickCount = IncrementChoicePickCount(choice);   
         OnChoiceSelected?.Invoke(choice);
 
         if (ui != null)
@@ -535,7 +539,7 @@ public class DialogueSystem : MonoBehaviour
         }
     }
 
-    private void PlayNextDialogue(GraphLevelData levelData)
+    private void OnLevelFinished(GraphLevelData levelData)
     {
         //if (levelData == null)
         //{
@@ -552,7 +556,7 @@ public class DialogueSystem : MonoBehaviour
         //    return;
         //}
         //Play(nextGraph, null);
-        
+        ClearChoicePickCounts();
     }
 
 
@@ -588,6 +592,7 @@ public class DialogueSystem : MonoBehaviour
     public void ClearChoicePickCounts()
     {
         _choicePickCounts.Clear();
+        UpdateWarningBar();
     }
 
     private int IncrementChoicePickCount(DialogueChoice choice)
@@ -597,7 +602,37 @@ public class DialogueSystem : MonoBehaviour
         _choicePickCounts.TryGetValue(key, out var current);
         current++;
         _choicePickCounts[key] = current;
+
+        UpdateWarningBar();
         return current;
     }
     // ===================================================================
+
+    private void UpdateWarningBar()
+    {
+        int totalRepeats = 0;
+
+        if (_choicePickCounts.Count == 0)
+        {
+            Debug.Log("[DialogueSystem] _choicePickCounts: <empty>");
+        }
+        else
+        {
+            string msg = string.Join(
+                ", ",
+                _choicePickCounts.Select(kvp => $"'{kvp.Key}': {kvp.Value}")
+            );
+
+            Debug.Log($"[DialogueSystem] _choicePickCounts: {msg}");
+        }
+
+
+        foreach (var kvp in _choicePickCounts)
+        {
+            totalRepeats += Mathf.Max(0, kvp.Value - 1);
+        }
+
+        if (ui != null)
+            ui.SetWarningBarFill((float)totalRepeats / maxRepeatCount);
+    }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using System.Linq;
 
 
 public class GraphManager : MonoBehaviour
@@ -38,12 +39,21 @@ public class GraphManager : MonoBehaviour
     private readonly Dictionary<string, NodeActor> _spawnedNodes = new();
     private readonly List<LineRenderer> _spawnedLines = new();
 
+    [Header("Input Lock (Runtime)")]
+    [SerializeField] private Animator injectorAnimator;
+    [SerializeField] private string injectorInjectStateName = "Anim_Injector_Inject";
+    [SerializeField] private bool inputLocked;
+    private int _inputLockCount;
+
+    public bool IsInputLocked => _inputLockCount > 0;
+
+
     // Runtime state (先留骨架)
     [Header("RunTime Debug")]
     [SerializeField] private string _currentNodeId;
     [SerializeField] private List<string> _reachableNodeIds = new List<string>();
 
-    [Header("MedicineRelated")]
+    [Header("Potion Related RunTime Debug")]
     [SerializeField] private List<RegionId> activatedRegions = new List<RegionId>();
     [SerializeField] private PotionSO selectedPotionSO;
 
@@ -172,21 +182,21 @@ public class GraphManager : MonoBehaviour
         }
     }
 
-    public void BuildLevelWLevelData(GraphLevelData newLevel) {
-        if (levelData != newLevel)
-        {
-            levelData = newLevel;
-            ClearLevel();
-            BuildLevel();
-        }
-        else
-        { 
-            Debug.Log("[GraphManager] BuildLevelWLevelData: levelData is the same as current, build again.");
-            ClearLevel();
-            BuildLevel();
-        }
+    //public void BuildLevelWLevelData(GraphLevelData newLevel) {
+    //    if (levelData != newLevel)
+    //    {
+    //        levelData = newLevel;
+    //        ClearLevel();
+    //        BuildLevel();
+    //    }
+    //    else
+    //    { 
+    //        Debug.Log("[GraphManager] BuildLevelWLevelData: levelData is the same as current, build again.");
+    //        ClearLevel();
+    //        BuildLevel();
+    //    }
         
-    }
+    //}
 
     //[ContextMenu("Build Level")]
     public void BuildLevel()
@@ -205,6 +215,9 @@ public class GraphManager : MonoBehaviour
 
         _currentNodeId = levelData.startNodeId;
         RecomputeReachable();
+
+        //添加所有的药物
+        potionInventoryManager.RefillPotions();
     }
 
     #region BuildLevel Steps
@@ -391,6 +404,12 @@ public class GraphManager : MonoBehaviour
     {
         Debug.Log($"[Graph] Clicked node: {nodeId}");
 
+
+        if (IsInputLocked) {
+            Debug.Log($"[Graph] Input is Locked, Can't Proceed Now");
+            return;
+        }
+
         //List<string> connectedIds = levelData.ReturnConnectedNodeIdsDepth(_currentNodeId, medicineStrength);
         if (!_reachableNodeIds.Contains(nodeId))
         {
@@ -398,34 +417,27 @@ public class GraphManager : MonoBehaviour
             return;
         }
 
-        _currentNodeId = nodeId;
+        StartCoroutine(PlayProceedCoroutine(nodeId));
 
-        var inventoryManager = PotionInventoryManager.Instance;
-        if (inventoryManager != null)
-        {
-            var potionId = inventoryManager.SelectedPotionId;
-            inventoryManager.TryConsume(potionId);
-        }
 
-        if (levelData != null && nodeId == levelData.endNodeId)
-        {
-            Debug.Log("[Graph] Reached END!");
-            OnLevelFinished?.Invoke(levelData);
-            ClearLevel();
 
-            //dialogueSystem.StopDialogue();
-            //if (levelData.nextLinearLevelDialogueGraph == null) { 
-            //    dialogueSystem.PlayNPC(levelData.nextHubAndBranchDialogueGraph);
-            //}
-            //else
-            //{
-            //    dialogueSystem.Play(levelData.nextLinearLevelDialogueGraph, () => { 
-            //        dialogueSystem.PlayNPC(levelData.nextHubAndBranchDialogueGraph);
-            //    });
-            //}
-        }
+        //_currentNodeId = nodeId;
 
-        RecomputeReachable();
+        //var inventoryManager = PotionInventoryManager.Instance;
+        //if (inventoryManager != null)
+        //{
+        //    var potionId = inventoryManager.SelectedPotionId;
+        //    inventoryManager.TryConsume(potionId);
+        //}
+
+        //if (levelData != null && nodeId == levelData.endNodeId)
+        //{
+        //    Debug.Log("[Graph] Reached END!");
+        //    OnLevelFinished?.Invoke(levelData);
+        //    ClearLevel();
+        //}
+
+        //RecomputeReachable();
     }
 
     // 根据当前节点、药剂等状态，重新计算可达节点;三种情况下重新计算：
@@ -440,7 +452,8 @@ public class GraphManager : MonoBehaviour
         if (selectedPotionSO == null)
         {
             // 没选择药剂时：全部当作不可用（只显示距离？或者全关掉）
-            _reachableNodeIds = levelData.ReturnConnectedNodeIdsDepth(_currentNodeId, 1);
+            //_reachableNodeIds = levelData.ReturnConnectedNodeIdsDepth(_currentNodeId, 1);
+            _reachableNodeIds.Clear();
         }
         else
         {
@@ -449,7 +462,9 @@ public class GraphManager : MonoBehaviour
 
         foreach (var kvp in _spawnedNodes)
         { 
+            var nodeId = kvp.Key;
             var actor = kvp.Value;
+
             bool inRange = _reachableNodeIds.Contains(actor.nodeId);
             bool colorOk = selectedPotionSO != null && selectedPotionSO.allowedColors.Contains(actor.NodeColor);
 
@@ -461,6 +476,12 @@ public class GraphManager : MonoBehaviour
                     regionOk = true;
                     break;
                 }
+            }
+
+            if (nodeId == "Node_End")
+            {
+                colorOk = true; // 终点不受颜色限制
+                regionOk = true; // 终点不受脑区限制
             }
 
             actor.SetNodeActivated(regionOk);
@@ -485,7 +506,7 @@ public class GraphManager : MonoBehaviour
         if (inventoryManager == null) return;
 
         var potionDef = inventoryManager.GetPotionDef(potionId);
-        if (potionDef == null) return;
+        //if (potionDef == null) return;
 
         selectedPotionSO = potionDef;
         RecomputeReachable();
@@ -506,8 +527,98 @@ public class GraphManager : MonoBehaviour
         SetActivatedRegion(new List<RegionId> { choice.regionId});
     }
 
-    //public bool IsNodeReachable(string nodeId) { 
-    //    if (string.IsNullOrEmpty(nodeId)) return false;
-    //    return activatedRegions.Contains(nodeId);
-    //}
+    public void LockInput()
+    {
+        _inputLockCount++;
+        inputLocked = IsInputLocked;
+    }
+
+    public void UnlockInput()
+    {
+        _inputLockCount = Mathf.Max(0, _inputLockCount - 1);
+        inputLocked = IsInputLocked;
+    }
+
+    public IEnumerator PlayProceedCoroutine(string nodeId)
+    {
+        LockInput();
+
+        _currentNodeId = nodeId;
+
+        var inventoryManager = PotionInventoryManager.Instance;
+        if (inventoryManager != null)
+        {
+            var potionId = inventoryManager.SelectedPotionId;
+            inventoryManager.TryConsume(potionId);
+        }
+
+
+        if (injectorAnimator == null)
+        {
+            Debug.LogWarning("[GraphManager] PlayProceedCoroutine: injectorAnimator is null.", this);
+            UnlockInput();
+            yield break;
+        }
+
+        injectorAnimator.ResetTrigger("ToInject");
+        injectorAnimator.SetTrigger("ToInject");
+
+        // Wait until the animator actually enters the target state, then wait until it finishes.
+        // This avoids unlocking too early if there is a transition delay.
+        int layer = 0;
+        float timeout = 2f;
+
+        // 1) Wait for state to start (or timeout)
+        while (timeout > 0f)
+        {
+            var st = injectorAnimator.GetCurrentAnimatorStateInfo(layer);
+            if (st.IsName(injectorInjectStateName))
+                break;
+
+            timeout -= Time.deltaTime;
+            yield return null;
+        }
+
+        // 2) Wait for state to complete (normalizedTime >= 1)
+        // If the clip loops, this would never end; make sure the state is non-looping.
+        while (true)
+        {
+            var st = injectorAnimator.GetCurrentAnimatorStateInfo(layer);
+            if (!st.IsName(injectorInjectStateName))
+            {
+                // State changed away (e.g., back to idle). Treat as finished.
+                break;
+            }
+
+            if (st.normalizedTime >= 1f)
+                break;
+
+            yield return null;
+        }
+
+        //_currentNodeId = nodeId;
+
+        //var inventoryManager = PotionInventoryManager.Instance;
+        //if (inventoryManager != null)
+        //{
+        //    var potionId = inventoryManager.SelectedPotionId;
+        //    inventoryManager.TryConsume(potionId);
+        //}
+
+        if (levelData != null && nodeId == levelData.endNodeId)
+        {
+            Debug.Log("[Graph] Reached END!");
+            OnLevelFinished?.Invoke(levelData);
+            ClearLevel();
+            UnlockInput();
+            yield break;
+        }
+
+
+        RecomputeReachable();
+
+        UnlockInput();
+        injectorAnimator.ResetTrigger("ToIdle");
+        injectorAnimator.SetTrigger("ToIdle");
+    }
 }

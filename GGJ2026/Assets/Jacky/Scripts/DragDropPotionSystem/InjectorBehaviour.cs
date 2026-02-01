@@ -18,4 +18,12 @@ public class InjectorBehaviour : MonoBehaviour
 
         potion.SelectThisPotion();
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Debug.Log("InjectorBehaviour: OnTriggerExit2D with " + collision.name);
+        var potion = collision.GetComponent<PotionBehaviour>();
+        if (potion == null) return;
+        potion.DeselectThisPotion();
+    }
 }
