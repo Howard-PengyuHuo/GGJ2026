@@ -41,15 +41,21 @@ MonoBehaviour:
     npcLine: 
     nextId: 
     choices:
-    - text: The moment you got your license?
-      nextId: 1.3
+    - text: Three Exams?
+      nextId: 1.1
       backToHub: 0
       regionId: 1
-    - text: Did you always want this career?
-      nextId: 2.3
+    - text: Exam Difficulty?
+      nextId: 1.2
       backToHub: 0
-      regionId: 2
+      regionId: 1
   - id: 1.1
+    npcLine: 'Right, this is my third time. First attempt: manual docking was 0.3
+      units off. Second: breathing rate exceeded limits. This time I cut out all
+      caffeinated drinks a week early. All for that one license.'
+    nextId: 1.10
+    choices: []
+  - id: 1.10
     npcLine: 
     nextId: 
     choices:
@@ -61,6 +67,154 @@ MonoBehaviour:
       nextId: 2.3
       backToHub: 0
       regionId: 2
+  - id: 1.2
+    npcLine: I spent eight months training daily in the simulator pod. I even dreamt
+      about manual corrections.
+    nextId: 1.20
+    choices:
+    - text: The moment you got your license?
+      nextId: 1.3
+      backToHub: 0
+      regionId: 1
+  - id: 1.20
+    npcLine: 
+    nextId: 
+    choices:
+    - text: The moment you got your license?
+      nextId: 1.3
+      backToHub: 0
+      regionId: 1
+  - id: 1.3
+    npcLine: "I stared at that \u2018Pass\u2019 on the screen for over ten seconds,
+      double-checked it three times before daring to screenshot it. My palms were
+      so sweaty I failed the fingerprint scan once."
+    nextId: 1.30
+    choices: []
+  - id: 1.30
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Let's discuss something else.
+      nextId: 
+      backToHub: 1
+      regionId: 0
+  - id: 2
+    npcLine: Exactly. Ever seen those gaps and holes between skyscrapers and bridges?
+      That space is reserved for the Elevated Rail. Only for the Elevated Rail.
+    nextId: 2.0
+    choices: []
+  - id: 2.0
+    npcLine: 
+    nextId: 
+    choices:
+    - text: "Elevated Rail\u2019s View?"
+      nextId: 2.1
+      backToHub: 0
+      regionId: 2
+    - text: Which Route Will You Fly Next?
+      nextId: 2.2
+      backToHub: 0
+      regionId: 2
+  - id: 2.1
+    npcLine: "You wouldn't understand. The Sixth Tower's aperture uses transparent
+      acoustic barriers. Looking west, a sliver of sunset hung on the reflective
+      dome\u2014I nearly shouted."
+    nextId: 2.10
+    choices: []
+  - id: 2.10
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Did you always want this career?
+      nextId: 2.3
+      backToHub: 0
+      regionId: 2
+  - id: 2.2
+    npcLine: "If dispatch goes smoothly, it's the Upper Ring Line 9. Heard that section
+      has a compressed arc tunnel passing through four towers consecutively\u2014a
+      full fifty-seven seconds with zero signal."
+    nextId: 2.20
+    choices: []
+  - id: 2.20
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Did you always want this career?
+      nextId: 2.3
+      backToHub: 0
+      regionId: 2
+  - id: 2.3
+    npcLine: Come on, I couldn't have wanted anything else. As a kid, I'd watch trains
+      hurtling past the towers. Spiral upward again and again, like the whole city
+      lay beneath them.
+    nextId: 2.30
+    choices: []
+  - id: 2.30
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Let's discuss something else.
+      nextId: 
+      backToHub: 1
+      regionId: 0
+  - id: 3
+    npcLine: ...Ah, yes. My dad took it when he was young too. Back then, the standards
+      weren't this high. Nowadays, the exam seems designed specifically to fail people.
+    nextId: 3.0
+    choices: []
+  - id: 3.0
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Test Pass Rate?
+      nextId: 3.1
+      backToHub: 0
+      regionId: 3
+    - text: Your father?
+      nextId: 3.2
+      backToHub: 0
+      regionId: 3
+  - id: 3.1
+    npcLine: Heard it's under five percent! Out of that whole row, I was the only
+      one who got the pass stamp. Elevated Rail operators really get weeded out hard...
+      Mainly... um, oh... hormone fluctuations, and heart rate...
+    nextId: 3.10
+    choices: []
+  - id: 3.10
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Exam Difficulty?
+      nextId: 1.2
+      backToHub: 0
+      regionId: 1
+  - id: 3.2
+    npcLine: "Huh? Ah, yes. He's an operator too. It's a demanding job\u2014he was
+      rarely home when I was little. But he did take me into the cockpit once."
+    nextId: 3.20
+    choices: []
+  - id: 3.20
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Rode that Elevated Rail as a kid?
+      nextId: 3.3
+      backToHub: 0
+      regionId: 3
+  - id: 3.3
+    npcLine: "Of course. I was seven that year. My dad had me sit by the window and
+      told me to close my eyes when we went through the compression tubes\u2014so
+      I could feel the pressure difference."
+    nextId: 3.30
+    choices: []
+  - id: 3.30
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Let's discuss something else.
+      nextId: 
+      backToHub: 1
+      regionId: 0
   npcProfile: {fileID: 0}
   showSpeakerUI: 0
-  nextLevelData: {fileID: 0}
+  nextLevelData: {fileID: 11400000, guid: 560ecd1091f943147a9d435d6cc1f880, type: 2}
