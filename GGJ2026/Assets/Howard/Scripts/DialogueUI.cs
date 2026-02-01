@@ -52,8 +52,8 @@ public class DialogueUI : MonoBehaviour
 
         if (npcPortrait != null)
         {
-            npcPortrait.sprite = npc != null ? npc.portrait : null;
-            npcPortrait.enabled = (npc != null && npc.portrait != null);
+            npcPortrait.sprite = npc != null ? npc.portraitOffSpeak : null;
+            npcPortrait.enabled = (npc != null && npc.portraitOffSpeak != null);
         }
     }
 

@@ -4,5 +4,9 @@ using UnityEngine;
 public class NPC : ScriptableObject
 {
     public string npcName;
-    public Sprite portrait;
+
+    public Sprite portraitOffSpeak;
+    public Sprite portraitOnSpeak;
+
+    public string npcDescription;
 }

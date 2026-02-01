@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 595ddc489bfb8be4e859d90b3bf0217e, type: 3}
   m_Name: NPC_1
   m_EditorClassIdentifier: 
-  npcName: Jacky
-  portrait: {fileID: 967905758, guid: 46d7657cc5b07944282d4e05da0824f6, type: 3}
+  npcName: Sinclair
+  portraitOffSpeak: {fileID: 21300000, guid: 10085a28bf393634b81d917e3df52cb0, type: 3}
+  portraitOnSpeak: {fileID: 21300000, guid: 392e1951456529d4d88e8caa4bcf02f4, type: 3}
+  npcDescription: 
