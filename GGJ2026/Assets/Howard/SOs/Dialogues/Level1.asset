@@ -131,7 +131,7 @@ MonoBehaviour:
   - id: 2.2
     npcLine: "I planned to have dinner with some coworkers\u2014all skilled technicians,
       reliable folks. Then I realized they've all been reassigned to outlying districts.
-      They don't have access permits for Xingang now."
+      They don't have access permits for New Harbor now."
     nextId: 2.2.0
     choices: []
   - id: 2.2.0
@@ -181,7 +181,7 @@ MonoBehaviour:
       backToHub: 0
       regionId: 3
   - id: 3.1
-    npcLine: "She doesn\u2019t come into the workshop much these days. Says the soles
+    npcLine: "She doesn\u2019t come into the plant much these days. Says the soles
       pick up iron dust, and the wooden floors at home creak. It leaves scratches."
     nextId: 3.10
     choices: []
