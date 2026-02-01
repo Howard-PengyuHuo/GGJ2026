@@ -183,4 +183,4 @@ MonoBehaviour:
     b: Node_B_1
   nextLinearLevelDialogueGraph: {fileID: 11400000, guid: 862f8c2f288ad9645b59f4658993806a, type: 2}
   nextHubAndBranchDialogueGraph: {fileID: 11400000, guid: d6718e67ab7a3154990b6bcab09209de, type: 2}
-  levelPrefab: {fileID: 849973786407378163, guid: 336b5ff267481b347ab1519feb94ebb3, type: 3}
+  levelPrefab: {fileID: 3873721015060182933, guid: 7549bc5b38b787c4db47b18696504e9d, type: 3}

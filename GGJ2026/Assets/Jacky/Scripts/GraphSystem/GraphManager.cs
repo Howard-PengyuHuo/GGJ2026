@@ -22,6 +22,8 @@ public class GraphManager : MonoBehaviour
     public Material redMat;
     public Material yellowMat;
     public Material greenMat;
+    public Material blueMat;
+    public Material greyMat;
 
     [Header("Edge Visual")]
     public Material lineMat;

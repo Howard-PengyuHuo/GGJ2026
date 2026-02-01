@@ -64,20 +64,30 @@ public class NodeActor : MonoBehaviour
     {
         _mgr = mgr;
         gameObject.name = $"Node_{nodeId}";
-        // nodeColor = nodeDef.color;
-        // nodeRegions = new List<RegionId>(nodeDef.allRegions);
-        //
-        // switch (nodeColor) { 
-        //     case NodeColor.Red:
-        //         GetComponentInChildren<Renderer>().material = mgr.redMat;
-        //         break;
-        //     case NodeColor.Yellow:
-        //         GetComponentInChildren<Renderer>().material = mgr.yellowMat;
-        //         break;
-        //     case NodeColor.Green:
-        //         GetComponentInChildren<Renderer>().material = mgr.greenMat;
-        //         break;
-        // }
+        nodeColor = nodeDef.color;
+        nodeRegions = new List<RegionId>(nodeDef.allRegions);
+
+        switch (nodeColor)
+        {
+            case NodeColor.Red:
+                GetComponentInChildren<Renderer>().material = mgr.redMat;
+                break;
+            case NodeColor.Yellow:
+                GetComponentInChildren<Renderer>().material = mgr.yellowMat;
+                break;
+            case NodeColor.Green:
+                GetComponentInChildren<Renderer>().material = mgr.greenMat;
+                break;
+            case NodeColor.Blue:
+                GetComponentInChildren<Renderer>().material = mgr.blueMat;
+                break;
+            case NodeColor.Grey:
+                GetComponentInChildren<Renderer>().material = mgr.greyMat;
+                break;
+            default:
+                GetComponentInChildren<Renderer>().material = mgr.defaultMat;
+                break;
+        }
     }
 
     public void ResetVisual(GraphManager mgr = null)
