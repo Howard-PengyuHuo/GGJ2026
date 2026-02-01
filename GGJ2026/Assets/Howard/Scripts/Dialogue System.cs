@@ -452,7 +452,8 @@ public class DialogueSystem : MonoBehaviour
                 return false;
             }
 
-            gm.PlayFailedDialogueThenResumeCurrent(0);
+            //gm.PlayFailedDialogueThenResumeCurrent(0);
+            gm.EnterFailScene(0);
 
             return true;
         }

@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   potionId: P_Ludopeptide
   displayName: Ludopeptide
-  description: "Used to Track Attachment\r\n Originally used to detect visual recognition
-    between test mothers and clones.\r\n Both ceased vocal response after three hours."
+  description: 'Used to Track Attachment
+
+    Originally used to detect visual recognition
+    between test mothers and clones. Both ceased vocal response after three hours.'
   icon: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
   uiTint: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0.5019608}
   allowedColors: 04000000

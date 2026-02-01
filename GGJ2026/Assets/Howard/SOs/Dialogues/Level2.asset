@@ -21,15 +21,15 @@ MonoBehaviour:
     nextId: 
     choices:
     - text: The exam?
-      nextId: 
+      nextId: 1
       backToHub: 0
       regionId: 1
     - text: Elevated Rail?
-      nextId: 
+      nextId: 2
       backToHub: 0
       regionId: 2
     - text: He?
-      nextId: 
+      nextId: 3
       backToHub: 0
       regionId: 3
   - id: 1
@@ -71,11 +71,7 @@ MonoBehaviour:
     npcLine: I spent eight months training daily in the simulator pod. I even dreamt
       about manual corrections.
     nextId: 1.20
-    choices:
-    - text: The moment you got your license?
-      nextId: 1.3
-      backToHub: 0
-      regionId: 1
+    choices: []
   - id: 1.20
     npcLine: 
     nextId: 
@@ -215,6 +211,6 @@ MonoBehaviour:
       nextId: 
       backToHub: 1
       regionId: 0
-  npcProfile: {fileID: 0}
-  showSpeakerUI: 0
+  npcProfile: {fileID: 11400000, guid: f190cdf054a102b4dabb8293eb6b2702, type: 2}
+  showSpeakerUI: 1
   nextLevelData: {fileID: 11400000, guid: 560ecd1091f943147a9d435d6cc1f880, type: 2}

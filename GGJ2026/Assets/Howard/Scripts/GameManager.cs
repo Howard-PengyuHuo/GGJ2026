@@ -186,6 +186,18 @@ public class GameManager : MonoBehaviour
         });
     }
 
+    public void EnterFailScene(int failIndex)
+    {
+        if (failIndex == 0)
+        {
+            SceneManager.LoadScene(3);
+        }
+        else if (failIndex == 1)
+        {
+            SceneManager.LoadScene(2);
+        }
+    }
+
 
     #region 错误的失败处理方法（保留以备参考）
     /// <summary>

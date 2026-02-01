@@ -45,6 +45,8 @@ public class PotionInventoryManager : MonoBehaviour
 
         BuildDatabase();
         BuildInventory();
+
+        //RefillPotions();
     }
 
     private void BuildDatabase()

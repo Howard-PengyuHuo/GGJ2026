@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: NPC_1
   m_EditorClassIdentifier: 
   npcName: Sinclair
-  portraitOffSpeak: {fileID: 21300000, guid: 10085a28bf393634b81d917e3df52cb0, type: 3}
-  portraitOnSpeak: {fileID: 21300000, guid: 392e1951456529d4d88e8caa4bcf02f4, type: 3}
+  portraitOffSpeak: {fileID: 21300000, guid: 596e988f62ca5ea45ab66d0d5c8d1c50, type: 3}
+  portraitOnSpeak: {fileID: 21300000, guid: 574c10354e1a49548b7d7762b44e06b6, type: 3}
   npcDescription: "Name: Sinclair; Age: 42; Job: Factroy Owner\\nThe middle-aged
     woman was neatly dressed, spoke in a steady voice, and kept her hands naturally
     folded on her right knee during the conversation. \u201CYesterday marked the
