@@ -15,7 +15,52 @@ MonoBehaviour:
   mode: 1
   startId: 
   hubId: L2
-  nodes: []
+  nodes:
+  - id: L2
+    npcLine: 
+    nextId: 
+    choices:
+    - text: The exam?
+      nextId: 
+      backToHub: 0
+      regionId: 1
+    - text: Elevated Rail?
+      nextId: 
+      backToHub: 0
+      regionId: 2
+    - text: He?
+      nextId: 
+      backToHub: 0
+      regionId: 3
+  - id: 1
+    npcLine: "Yeah, I took it three times just for this license. Look at this steel
+      stamp\u2014Level 5. The real deal for operating the city's Elevated Ring Rail."
+    nextId: 1.0
+    choices: []
+  - id: 1.0
+    npcLine: 
+    nextId: 
+    choices:
+    - text: The moment you got your license?
+      nextId: 1.3
+      backToHub: 0
+      regionId: 1
+    - text: Did you always want this career?
+      nextId: 2.3
+      backToHub: 0
+      regionId: 2
+  - id: 1.1
+    npcLine: 
+    nextId: 
+    choices:
+    - text: The moment you got your license?
+      nextId: 1.3
+      backToHub: 0
+      regionId: 1
+    - text: Did you always want this career?
+      nextId: 2.3
+      backToHub: 0
+      regionId: 2
   npcProfile: {fileID: 0}
   showSpeakerUI: 0
   nextLevelData: {fileID: 0}
