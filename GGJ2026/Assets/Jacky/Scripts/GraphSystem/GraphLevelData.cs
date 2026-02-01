@@ -115,7 +115,9 @@ public enum NodeColor
     Red = 0,
     Yellow = 1,
     Green = 2,
-    Black = 3
+    Black = 3,
+    Grey = 4,
+    Blue = 5
 }
 
 public enum RegionId

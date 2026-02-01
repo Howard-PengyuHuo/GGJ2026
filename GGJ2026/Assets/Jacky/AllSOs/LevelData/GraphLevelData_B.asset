@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52377bc082a419d4ebf989b80881ccb6, type: 3}
+  m_Name: GraphLevelData_B
+  m_EditorClassIdentifier: 
+  levelId: BrainCase_B
+  displayName: Brain Case B
+  startNodeId: Node_Start
+  endNodeId: Node_End
+  initialActivatedRegions: 
+  nodes:
+  - id: Node_A_1
+    color: 1
+    allRegions: 
+  - id: Node_Start
+    color: 3
+    allRegions: 00000000
+  - id: Node_End
+    color: 3
+    allRegions: 00000000
+  edges:
+  - a: 
+    b: 
+  nextLinearLevelDialogueGraph: {fileID: 0}
+  nextHubAndBranchDialogueGraph: {fileID: 0}
