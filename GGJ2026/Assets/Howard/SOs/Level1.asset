@@ -20,30 +20,255 @@ MonoBehaviour:
     npcLine: 
     nextId: 
     choices:
-    - text: Q1
-      nextId: L1.1
+    - text: ' The factory?'
+      nextId: 1
       backToHub: 0
       regionId: 1
-    - text: Q2
-      nextId: L1.1
+    - text: Anniversary?
+      nextId: 2
       backToHub: 0
       regionId: 2
-    - text: Q3
-      nextId: L1.1
+    - text: Takeover?
+      nextId: 3
       backToHub: 0
       regionId: 3
-  - id: L1.1
-    npcLine: hhhhhhhhhhhh
-    nextId: L1.2
+  - id: 1
+    npcLine: A low-temperature composite material compression plant, passed down
+      from my grandfather.
+    nextId: 1.0
     choices: []
-  - id: L1.2
+  - id: 1.0
     npcLine: 
     nextId: 
     choices:
-    - text: I see.
+    - text: ' Your grandfather?'
+      nextId: 1.1
+      backToHub: 0
+      regionId: 1
+    - text: Family business?
+      nextId: 1.2
+      backToHub: 0
+      regionId: 1
+  - id: 1.1
+    npcLine: "He and a few of the past technicians taught me how to read engine oil
+      scents by scents\u2014rich means fresh oil, faint signals trouble with the
+      machinery. He can't smell it anymore though."
+    nextId: 1.1.0
+    choices: []
+  - id: 1.1.0
+    npcLine: 
+    nextId: 
+    choices:
+    - text: "You\u2019ve been in the factory when you were still little?"
+      nextId: 1.3
+      backToHub: 0
+      regionId: 1
+    - text: Past technicians?
+      nextId: 2.3
+      backToHub: 0
+      regionId: 2
+  - id: 1.3
+    npcLine: Oh of course. I was only six that year. The hot air blew my hair up,
+      and a small strand got curled by the heat. I watched the whole afternoon.
+    nextId: 1.3.0
+    choices: []
+  - id: 1.3.0
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Let's discuss something else.
       nextId: 
       backToHub: 1
       regionId: 0
+  - id: 2.3
+    npcLine: ...As I said, they were all... dependable. At least no mistakes happened
+      after I took over. They've all been reassigned to other districts now.
+    nextId: 
+    choices: []
+  - id: 2.3.0
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Let's discuss something else.
+      nextId: 
+      backToHub: 1
+      regionId: 0
+  - id: 2.1
+    npcLine: "Just like birthdays. I bought a cake\u2014hazelnut flavored. Our family's
+      tastes haven't changed much over the years. Mom, dad, grandpa\u2026when they
+      celebrated birthdays when I was little, it was always hazelnut cake too."
+    nextId: 2.1.0
+    choices: []
+  - id: 2.1.0
+    npcLine: 
+    nextId: 
+    choices:
+    - text: ' Your grandfather?'
+      nextId: 1.1
+      backToHub: 0
+      regionId: 1
+    - text: How's your Mom been?
+      nextId: 3.1
+      backToHub: 0
+      regionId: 3
+  - id: 1.2
+    npcLine: "Yes, a day worth marking. It\u2019s been ten years. The factory has
+      been operated smoothly for a whole decade."
+    nextId: 
+    choices: []
+  - id: 1.2.0
+    npcLine: 
+    nextId: 
+    choices:
+    - text: How did you celebrate the anniversary?
+      nextId: 2.1
+      backToHub: 0
+      regionId: 2
+    - text: Who did you celebrate with?
+      nextId: 2.2
+      backToHub: 0
+      regionId: 2
+  - id: 2.2
+    npcLine: "I planned to have dinner with some coworkers\u2014all skilled technicians,
+      reliable folks. Then I realized they've all been reassigned to outlying districts.
+      They don't have access permits for Xingang now."
+    nextId: 2.2.0
+    choices: []
+  - id: 2.2.0
+    npcLine: Past technicians?
+    nextId: 
+    choices:
+    - text: Past technicians?
+      nextId: 2.3
+      backToHub: 0
+      regionId: 2
+    - text: Let's discuss something else
+      nextId: 
+      backToHub: 1
+      regionId: 0
+  - id: 2
+    npcLine: "Yes, a day worth marking. It\u2019s been ten years. The factory has
+      been operated smoothly for a whole decade."
+    nextId: 2.0
+    choices: []
+  - id: 2.0
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Who did you celebrate with?
+      nextId: 2.2
+      backToHub: 0
+      regionId: 2
+    - text: How did you celebrate the anniversary?
+      nextId: 2.1
+      backToHub: 0
+      regionId: 2
+  - id: 3
+    npcLine: My mother was the previous manager. She stepped down ten years ago,
+      and I took over.
+    nextId: 
+    choices: []
+  - id: 3.0
+    npcLine: 
+    nextId: 
+    choices:
+    - text: ' How''s your Mom been?'
+      nextId: 3.1
+      backToHub: 0
+      regionId: 3
+    - text: ' How''s the factory been since you took over?'
+      nextId: 3.2
+      backToHub: 0
+      regionId: 3
+  - id: 3.1
+    npcLine: "She doesn\u2019t come into the workshop much these days. Says the soles
+      pick up iron dust, and the wooden floors at home creak. It leaves scratches."
+    nextId: 
+    choices: []
+  - id: 3.10
+    npcLine: 
+    nextId: 
+    choices:
+    - text: What has your mom talked to you about lately?
+      nextId: 
+      backToHub: 0
+      regionId: 3
+    - text: Let's discuss something else.
+      nextId: 
+      backToHub: 1
+      regionId: 0
+  - id: 3.2
+    npcLine: "The system occasionally lags, and we've been switching technicians
+      a bit too often... Occasionally I hear the main control lathe rebooting for
+      self-check. The workshop\u2019s always quieter than it should be\u2014with
+      that many people inside."
+    nextId: 3.20
+    choices: []
+  - id: 3.20
+    npcLine: 
+    nextId: 3.20
+    choices:
+    - text: Past technicians?
+      nextId: 2.3
+      backToHub: 0
+      regionId: 2
+    - text: You go to the factory yourself every day?
+      nextId: 3.3
+      backToHub: 0
+      regionId: 3
+    - text: What has your mom talked to you about lately?
+      nextId: 3.4
+      backToHub: 0
+      regionId: 3
+  - id: 3.3
+    npcLine: "It's a habit. I usually arrive at 8:30. The system requires manual
+      authentication to boot up. I'm not used to remote control\u2014I've always
+      preferred things I can touch with my own hands, ever since I was a child."
+    nextId: 3.30
+    choices: []
+  - id: 3.30
+    npcLine: 
+    nextId: 
+    choices:
+    - text: "You\u2019ve been in the factory when you were still little?"
+      nextId: 1.3
+      backToHub: 0
+      regionId: 1
+    - text: Let's discuss something else.
+      nextId: 
+      backToHub: 1
+      regionId: 0
+  - id: 3.4
+    npcLine: We hardly discuss the factory anymore. But last week she asked about
+      the factory cat. I told her the last time it ran away was three years ago.
+    nextId: 3.40
+    choices: []
+  - id: 3.40
+    npcLine: 
+    nextId: 
+    choices:
+    - text: ' A cat? Pets are allowed in the factory?'
+      nextId: 1.4
+      backToHub: 0
+      regionId: 1
+    - text: Let's discuss something else.
+      nextId: 
+      backToHub: 1
+      regionId: 0
+  - id: 1.4
+    npcLine: 'No, it''s not anyone''s pet. It came on its own and showed up at the
+      factory from time to time. A few of my old friends, also technicians, first
+      spotted it in a corner of the compression sector. '
+    nextId: 1.40
+    choices: []
+  - id: 1.40
+    npcLine: 
+    nextId: 
+    choices:
+    - text: Past technicians?
+      nextId: 2.3
+      backToHub: 0
+      regionId: 2
   npcProfile: {fileID: 11400000, guid: ade9926376cdf4b4d9186164ce138ef6, type: 2}
-  showSpeakerUI: 1
+  showSpeakerUI: 0
   nextLevelData: {fileID: 11400000, guid: 96ffd9856f8985344a77fc43ff6b5067, type: 2}
