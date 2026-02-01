@@ -3,53 +3,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
-    //[Header("Dialogue")]
-    //public DialogueSystem dialogueSystem;
-    //public DialogueGraph intro;
-    //public DialogueGraph level1;
-    //public DialogueGraph outro;
-
-
-    //// Start is called once before the first execution of Update after the MonoBehaviour is created
-    //void Start()
-    //{
-    //    Intro();
-    //}
-
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
-    //void Intro()
-    //{
-    //    dialogueSystem.Play(intro, () =>
-    //    {
-    //        StartLevel();
-    //        //GraphManager.Instance.BuildLevelWLevelData()
-    //    });
-    //}
-
-    //void StartLevel()
-    //{
-    //    dialogueSystem.PlayNPC(level1);
-    //}
-
-
-
-    //void GameOver()
-    //{
-    //    dialogueSystem.Play(outro, () =>
-    //    {
-    //        Intro();
-    //    });
-    //}
-
     [Header("References")]
     [SerializeField] private DialogueSystem dialogueSystem;
+    public static GameManager Instance { get; private set; }
 
     [Header("Linear Dialogue Sequence (play in order)")]
     [Tooltip("Main linear sequence of dialogue graphs. Each one finishes -> next one starts.")]
@@ -71,9 +27,30 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GraphManager _graphManager;
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        Instance = this;
+        if (_graphManager == null)
+        {
+            _graphManager = GraphManager.Instance;
+        }
+    }
+
     private void Start()
     {
         PlayFromStart();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.T)) { 
+            PlayFailedDialogueThenResumeCurrent(0);
+        }
     }
 
     private void SubscribeAll()
@@ -153,6 +130,61 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 直接跳到 sequence 的某个 index 播放（并且保持线性链路：播完会继续 PlayNext）。
+    /// </summary>
+    public void PlayByIndex(int index)
+    {
+        if (dialogueSystem == null) return;
+
+        if (sequence == null || sequence.Count == 0)
+        {
+            Debug.LogWarning("[GameManager] PlayByIndex: sequence is empty.");
+            return;
+        }
+
+        if (index < 0 || index >= sequence.Count)
+        {
+            Debug.LogWarning($"[GameManager] PlayByIndex: index out of range: {index}");
+            return;
+        }
+
+        // Cut current dialogue immediately.
+        dialogueSystem.Interrupt();
+
+        _index = index - 1; // 让 PlayNext() 把它 +1 到目标 index
+        PlayNext();
+    }
+
+    /// <summary>
+    /// 给 DialogueSystem 用：播放失败对话（默认用 failGraphA），播完后回到“当前 index”对应的对话重新播放。
+    /// </summary>
+    public void PlayFailedDialogueThenResumeCurrent(int failedGraphIndex)
+    {
+        var resumeIndex = _index;
+
+        // Cut current dialogue immediately.
+        if (dialogueSystem != null)
+            dialogueSystem.Interrupt();
+
+        //var failGraph = failGraphA != null ? failGraphA : failGraphB;
+        var failGraph = failedGraphIndex == 0 ? failGraphA : failGraphB;
+        if (failGraph == null)
+        {
+            Debug.LogWarning("[GameManager] No failGraph assigned, resuming directly.");
+            PlayByIndex(resumeIndex);
+            return;
+        }
+
+        dialogueSystem.Play(failGraph, () =>
+        {
+            PlayByIndex(resumeIndex);
+            Debug.Log("[GameManager] Failed dialogue finished, resuming current dialogue.");
+        });
+    }
+
+
+    #region 错误的失败处理方法（保留以备参考）
+    /// <summary>
     /// Call this when fail case A happens.
     /// </summary>
     public void FailA()
@@ -196,4 +228,5 @@ public class GameManager : MonoBehaviour
         _index = sequenceStartIndexOnFail - 1;
         PlayNext();
     }
+    #endregion
 }

@@ -438,8 +438,8 @@ public class DialogueSystem : MonoBehaviour
         if (_graph == null) return;
         if (choice == null) return;
         
-        var pickCount = IncrementChoicePickCount(choice);   
-        OnChoiceSelected?.Invoke(choice);
+        //var pickCount = IncrementChoicePickCount(choice);   
+        //OnChoiceSelected?.Invoke(choice);
 
         if (ui != null)
         {
@@ -462,11 +462,22 @@ public class DialogueSystem : MonoBehaviour
 
         if (string.IsNullOrEmpty(choice.nextId))
         {
-            Debug.LogError("Choice nextId is empty");
+            Debug.LogError($"Choice nextId is empty, current choice is {choice.text}, nextId is {choice.nextId}");
             EndDialogue(naturalEnd: true);
             return;
         }
 
+        var pickCount = IncrementChoicePickCount(choice);
+        bool exceeded = UpdateWarningBar();
+
+        if (exceeded) { 
+            OnLevelFinished(_graph.nextLevelData);
+            graphManager.ClearLevel();
+            graphManager.UnlockInput();
+            return;
+        }
+
+        OnChoiceSelected?.Invoke(choice);
         GoTo(choice.nextId);
     }
 
@@ -602,13 +613,11 @@ public class DialogueSystem : MonoBehaviour
         _choicePickCounts.TryGetValue(key, out var current);
         current++;
         _choicePickCounts[key] = current;
-
-        UpdateWarningBar();
         return current;
     }
     // ===================================================================
 
-    private void UpdateWarningBar()
+    private bool UpdateWarningBar()
     {
         int totalRepeats = 0;
 
@@ -622,17 +631,36 @@ public class DialogueSystem : MonoBehaviour
                 ", ",
                 _choicePickCounts.Select(kvp => $"'{kvp.Key}': {kvp.Value}")
             );
-
+            
             Debug.Log($"[DialogueSystem] _choicePickCounts: {msg}");
         }
-
 
         foreach (var kvp in _choicePickCounts)
         {
             totalRepeats += Mathf.Max(0, kvp.Value - 1);
         }
 
+        Debug.Log($"[DialogueSystem] Total choice repeats: {totalRepeats} (max allowed: {maxRepeatCount})");
+
+        var fill = maxRepeatCount <= 0 ? 1f : (float)totalRepeats / maxRepeatCount;
+
         if (ui != null)
-            ui.SetWarningBarFill((float)totalRepeats / maxRepeatCount);
+            ui.SetWarningBarFill(fill);
+
+        if (totalRepeats > maxRepeatCount) { 
+            ClearChoicePickCounts();
+
+            var gm = GameManager.Instance;
+            if (gm == null)
+            {
+                Debug.LogWarning("[DialogueSystem] totalRepeats exceeded but GameManager not found in scene.");
+                return false;
+            }
+
+            gm.PlayFailedDialogueThenResumeCurrent(0);
+
+            return true;
+        }
+        return false;
     }
 }
