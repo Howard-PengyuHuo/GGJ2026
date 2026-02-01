@@ -24,6 +24,9 @@ public class GraphLevelData : ScriptableObject
     public DialogueGraph nextLinearLevelDialogueGraph;
     public DialogueGraph nextHubAndBranchDialogueGraph;
 
+    [Header("Level Prefab")]
+    public GameObject levelPrefab;
+
     public bool TryGetNode(string id, out NodeDef node)
     {
         node = null;

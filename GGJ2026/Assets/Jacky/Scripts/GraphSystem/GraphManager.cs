@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Analytics;
+using System.Linq;
+
 
 public class GraphManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class GraphManager : MonoBehaviour
 
     [Header("Reference")]
     [SerializeField] private DialogueSystem dialogueSystem;
+    [SerializeField] private Transform brainSpawnTransform;
 
     [Header("ColorMaterials")]
     public Material defaultMat;
@@ -26,6 +28,8 @@ public class GraphManager : MonoBehaviour
     [SerializeField] private Transform lineRendererTransform;
 
     [Header("AllNodes")]
+    private GameObject levelInstance;
+
     [SerializeField] private List<NodeActor> allNodes = new List<NodeActor>();
 
     private readonly Dictionary<string, NodeActor> _spawnedNodes = new();
@@ -43,6 +47,7 @@ public class GraphManager : MonoBehaviour
     // ================= Events =================
     public Action<List<RegionId>> OnActivatedRegionsChanged;
 
+    public Action<GraphLevelData> OnLevelFinished;
 
     // ================= Editor Tools =================
 #if UNITY_EDITOR
@@ -79,7 +84,7 @@ public class GraphManager : MonoBehaviour
 
         EditorUtility.SetDirty(this);
     }
-
+     
     [ContextMenu("Editor Tools/Clear Level")]
     private void Editor_ClearLevel()
     {
@@ -118,6 +123,11 @@ public class GraphManager : MonoBehaviour
         if (inventoryManager != null)
         {
             inventoryManager.OnSelectedPotionChanged += OnSelectedPotionChanged;
+        }
+        if (dialogueSystem != null) { 
+            dialogueSystem.OnDialogueStarted += OnDialogueStarted;
+            //Debug.Log("[GraphManager] Subscribed to dialogueSystem OnDialogueStarted");
+            dialogueSystem.OnChoiceSelected += OnTextChoiceSelected;
         }
     }
 
@@ -163,7 +173,6 @@ public class GraphManager : MonoBehaviour
         }
     }
 
-
     public void BuildLevelWLevelData(GraphLevelData newLevel) {
         if (levelData != newLevel)
         {
@@ -180,7 +189,7 @@ public class GraphManager : MonoBehaviour
         
     }
 
-    [ContextMenu("Build Level")]
+    //[ContextMenu("Build Level")]
     public void BuildLevel()
     {
         ClearLevel();
@@ -201,7 +210,18 @@ public class GraphManager : MonoBehaviour
 
     #region BuildLevel Steps
     private void CollectSceneNodes()
-    { 
+    {
+        // Instantiate level prefab under brainSpawnTransform
+        levelInstance = Instantiate(
+            levelData.levelPrefab,
+            brainSpawnTransform.position,
+            brainSpawnTransform.rotation
+        );
+        //把所有levelprefab下的NodeActor都收集起来
+        levelInstance.transform.SetParent(brainSpawnTransform);
+
+        allNodes = levelInstance.GetComponentsInChildren<NodeActor>().ToList();
+
         _spawnedNodes.Clear();
 
         for (int i = 0; i < allNodes.Count; i++)
@@ -330,7 +350,7 @@ public class GraphManager : MonoBehaviour
 
     #endregion
 
-    [ContextMenu("Clear Level")]
+    //[ContextMenu("Clear Level")]
     public void ClearLevel()
     {
         // 反向流程：不再销毁节点（节点是你手工摆放并保存到场景里的）
@@ -344,15 +364,22 @@ public class GraphManager : MonoBehaviour
         _spawnedLines.Clear();
         _spawnedNodes.Clear();
 
-        // 节点回到“未初始化/不可达/未激活”的外观
-        for (int i = 0; i < allNodes.Count; i++)
+        // Destroy level instance 把所有node都删掉
+        if (levelInstance != null)
         {
-            var n = allNodes[i];
-            if (n == null) continue;
-            n.ResetVisual(this);
-
-            n.gameObject.SetActive(false);
+            DestroyImmediate(levelInstance);
+            levelInstance = null;
         }
+
+        //// 节点回到“未初始化/不可达/未激活”的外观
+        //for (int i = 0; i < allNodes.Count; i++)
+        //{
+        //    var n = allNodes[i];
+        //    if (n == null) continue;
+        //    n.ResetVisual(this);
+
+        //    n.gameObject.SetActive(false);
+        //}
 
         _currentNodeId = null;
         _reachableNodeIds.Clear();
@@ -384,19 +411,19 @@ public class GraphManager : MonoBehaviour
         if (levelData != null && nodeId == levelData.endNodeId)
         {
             Debug.Log("[Graph] Reached END!");
-
+            OnLevelFinished?.Invoke(levelData);
             ClearLevel();
 
-            dialogueSystem.StopDialogue();
-            if (levelData.nextLinearLevelDialogueGraph == null) { 
-                dialogueSystem.PlayNPC(levelData.nextHubAndBranchDialogueGraph);
-            }
-            else
-            {
-                dialogueSystem.Play(levelData.nextLinearLevelDialogueGraph, () => { 
-                    dialogueSystem.PlayNPC(levelData.nextHubAndBranchDialogueGraph);
-                });
-            }
+            //dialogueSystem.StopDialogue();
+            //if (levelData.nextLinearLevelDialogueGraph == null) { 
+            //    dialogueSystem.PlayNPC(levelData.nextHubAndBranchDialogueGraph);
+            //}
+            //else
+            //{
+            //    dialogueSystem.Play(levelData.nextLinearLevelDialogueGraph, () => { 
+            //        dialogueSystem.PlayNPC(levelData.nextHubAndBranchDialogueGraph);
+            //    });
+            //}
         }
 
         RecomputeReachable();
@@ -461,6 +488,21 @@ public class GraphManager : MonoBehaviour
 
         selectedPotionSO = potionDef;
         RecomputeReachable();
+    }
+
+    private void OnDialogueStarted(DialogueGraph graph)
+    {
+        Debug.Log("[GraphManager] OnDialogueStarted: " + graph.name);
+        if (graph.nextLevelData != null)
+        {
+            levelData = graph.nextLevelData;
+            BuildLevel();
+        }
+    }
+
+    private void OnTextChoiceSelected(DialogueChoice choice)
+    {       
+        SetActivatedRegion(new List<RegionId> { choice.regionId});
     }
 
     //public bool IsNodeReachable(string nodeId) { 
